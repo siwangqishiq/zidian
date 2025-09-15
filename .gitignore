@@ -1,0 +1,8 @@
+*.iml
+/build/**
+/build_linux/**
+/build_mac/**
+/.vscode
+.externalNativeBuild
+.cxx
+local.properties
