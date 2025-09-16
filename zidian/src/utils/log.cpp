@@ -9,8 +9,7 @@ namespace zidian{
     
 #ifdef __ANDROID__
     #include <android/log.h>
-
-    #define  LOG_TAG    "purple"
+    #define  LOG_TAG    "zidian"
     #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO, __VA_ARGS__)
     #define  LOGW(...)  __android_log_print(purple::ANDROID_LOG_WARN, __VA_ARGS__)
     #define  LOGE(...)  __android_log_print(purple::ANDROID_LOG_ERROR, __VA_ARGS__)
@@ -58,7 +57,7 @@ namespace zidian{
         ss << str;
         return ss.str();
     }
-    
+
 }
 
 

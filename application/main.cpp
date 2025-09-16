@@ -9,7 +9,7 @@ int main(int argc, char *argv[]){
 
     zidian::Log::i("app", "before init.");
     sandBox.init(param);
-
+    
     zidian::Log::w("app", "before run loop");
     return sandBox.runLoop(argc, argv);
 }

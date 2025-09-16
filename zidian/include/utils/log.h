@@ -20,7 +20,6 @@ namespace zidian{
         auto pstrOut =new char[lenStr];
         std::snprintf(pstrOut, lenStr, format.c_str(), args...);
         std::string str(pstrOut);
-
         delete[] pstrOut;
         return str;
     }
@@ -29,7 +28,7 @@ namespace zidian{
         public:
             const static std::string TAG;
             const static std::string TIME_FORMAT;
-
+            
             #define NONE         "\033[m"
             #define RED          "\033[0;32;31m"
             #define LIGHT_RED    "\033[1;31m"

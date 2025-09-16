@@ -27,10 +27,7 @@ elseif (WIN32)
     message(STATUS "This Windows platform")
 endif()
 
-
 include_directories(zidian/include)
-# include_directories(vender/glfw/include)
-
 add_subdirectory(zidian)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
@@ -38,7 +35,6 @@ aux_source_directory(application SRCS)
 
 if (WIN32)
     message(STATUS "Using Win32 library")
-    # link_directories(lib/win64)
 endif()
 
 add_executable(${PROJECT_NAME} ${SRCS})
@@ -46,5 +42,5 @@ add_executable(${PROJECT_NAME} ${SRCS})
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-Wall")
 # set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-mwindows")
 
-target_link_libraries(${PROJECT_NAME} zidian)
+target_link_libraries(${PROJECT_NAME} PRIVATE zidian)
 
