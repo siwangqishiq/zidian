@@ -41,12 +41,13 @@ namespace zidian{
             }
         }//end while
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        this->is_exit = true;
+        // std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        m_render_thread.join();
         glfwDestroyWindow(m_window);
         glfwTerminate();
         Log::w(TAG,"run loop end prepare");
 
-        m_render_thread.join();
         // std::this_thread::sleep_for(std::chrono::seconds(5));
         Log::w(TAG,"run loop end");
         return 0;
@@ -56,9 +57,11 @@ namespace zidian{
         Log::w(TAG,"start render thread: %ld", std::this_thread::get_id());
         glfwMakeContextCurrent(m_window);
         while(!this->is_exit){
-            // select render command queue  
+            //  select render command queue  
             //  run command
             glfwSwapBuffers(m_window);
         }//end while
+
+        glfwMakeContextCurrent(nullptr);
     }
 }
