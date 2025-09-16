@@ -6,6 +6,10 @@ int main(int argc, char *argv[]){
     param.name = "sand_box_game";
 
     zidian::SandBox sandBox;
+
+    zidian::Log::i("app", "before init.");
     sandBox.init(param);
+
+    zidian::Log::w("app", "before run loop");
     return sandBox.runLoop(argc, argv);
 }

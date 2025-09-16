@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 
 project(zidian CXX)
 
+# set(CMAKE_BUILD_TYPE Debug)
+
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS inlcude/*.h)
 
