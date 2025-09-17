@@ -34,9 +34,9 @@ else()
 endif()
 
 # 动态库
-add_library(${PROJECT_NAME} SHARED ${SOURCES})
+# add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 # 静态库
-# add_library(${PROJECT_NAME} STATIC ${SOURCES})
+add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} glfw3)

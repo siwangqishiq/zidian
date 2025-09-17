@@ -6,8 +6,6 @@
 #include "GLFW/glfw3.h"
 #endif
 
-
-
 namespace zidian{
     const std::string TAG = "zidian";
     bool UNITTEST = false;

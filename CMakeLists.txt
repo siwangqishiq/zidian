@@ -11,10 +11,12 @@ message("statrt to build ${app} ...")
 set(CMAKE_BUILD_TYPE Debug)
 
 # for dll import use case 
-set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})  
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)  
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-set (CMAKE_CXX_FLAGS "-std=c++17")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(STATUS "This Linux platform")
@@ -27,20 +29,42 @@ elseif (WIN32)
     message(STATUS "This Windows platform")
 endif()
 
+# 包含引擎头文件
 include_directories(zidian/include)
+
+# 引擎子目录
 add_subdirectory(zidian)
 
+# 应用源文件
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
-aux_source_directory(application SRCS)
+aux_source_directory(application APP_SRCS)
 
 if (WIN32)
     message(STATUS "Using Win32 library")
 endif()
 
-add_executable(${PROJECT_NAME} ${SRCS})
+add_executable(${PROJECT_NAME} ${APP_SRCS})
+
+target_link_libraries(${PROJECT_NAME} PRIVATE zidian)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-Wall")
 # set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-mwindows")
 
-target_link_libraries(${PROJECT_NAME} PRIVATE zidian)
+# -------------------------
+# 安装规则
+# -------------------------
 
+# 安装 zidian 引擎头文件
+install(DIRECTORY zidian/include/ DESTINATION include)
+# 安装 zidian 生成的库（dll/so/lib）
+install(TARGETS zidian
+        EXPORT zidianTargets
+        LIBRARY DESTINATION lib       # for .so
+        ARCHIVE DESTINATION lib       # for .a
+        RUNTIME DESTINATION bin)      # for .dll
+
+# 导出 cmake 配置，方便其他项目 find_package()
+install(EXPORT zidianTargets
+        FILE zidianConfig.cmake
+        NAMESPACE zidian::
+        DESTINATION lib/cmake/zidian)
