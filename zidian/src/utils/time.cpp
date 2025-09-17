@@ -22,11 +22,11 @@ namespace zidian{
         using namespace std;
         using namespace std::chrono;
         auto ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
-        return static_cast<long>(ms.count());
+        return ms.count();
     }
 
-    float CurrentTimeMillisFloat(){
-        auto t = CurrentTimeMillis();
-        return t / 1000.0f;
+    double CurrentTimeMillisFloat(){
+        long long t = CurrentTimeMillis();
+        return static_cast<double>(t) / 1000.0;
     }
 }

@@ -2,7 +2,7 @@
 
 #include <random>
 
-namespace zidian {
+namespace zidian{
     class RandomUtil{
     public:
         static std::default_random_engine rndEngine;

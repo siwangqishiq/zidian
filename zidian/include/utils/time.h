@@ -7,5 +7,5 @@ namespace zidian{
 
     long long CurrentTimeMicro();
 
-    float CurrentTimeMillisFloat();
+    double CurrentTimeMillisFloat();
 }
