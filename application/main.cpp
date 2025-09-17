@@ -7,14 +7,14 @@ public:
         zidian::Log::i("GameApp","onInit");
     }
 
-    virtual void onTick(){
+    virtual void onTick(float delta_time){
         // zidian::Log::i("GameApp","onTick");
         auto time_mirco = zidian::CurrentTimeMicro();
         auto time_mil = zidian::CurrentTimeMillis();
-        auto time_flt = zidian::CurrentTimeMillisFloat();
+        auto time_flt = zidian::CurrentTimeMillisDoubleFloat();
         auto time_seconds = zidian::CurrentTimeSeconds();
-        zidian::Log::i("GameApp","time :%lld  %lld  %f %lld",time_mirco, time_mil , 
-            time_flt, time_seconds);
+        zidian::Log::i("GameApp","time :%lld  %lld  %f %lld  deltatime: %f",time_mirco, time_mil , 
+            time_flt, time_seconds , 1000.0f * delta_time);
     }
 
     virtual void onDispose(){
@@ -30,6 +30,7 @@ int main(int argc, char *argv[]){
     zidian::AppParams param;
 
     param.name = "sand_box_game";
+    param.vsync = false;
     param.render_backend = zidian::RenderBackend::Opengl;
 
     sandBox.init(param);

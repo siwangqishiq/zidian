@@ -23,9 +23,17 @@ namespace zidian{
         std::atomic<bool> is_exit = false;
 
         GLFWwindow *m_window = nullptr;
+
+        //记录上一帧的时间
+        double m_last_time_mills = 0.0f;
         
-        void renderThreadFunc();
+        float m_delta_time_mills = 0.0f;
+        
+        void updateTimeStamp();
+        
         void mainThreadFunc();
+
+        void renderThreadFunc();
     };
 }
 

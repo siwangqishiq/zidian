@@ -25,7 +25,7 @@ namespace zidian{
         return ms.count();
     }
 
-    double CurrentTimeMillisFloat(){
+    double CurrentTimeMillisDoubleFloat(){
         long long t = CurrentTimeMillis();
         return static_cast<double>(t) / 1000.0;
     }
