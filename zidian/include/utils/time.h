@@ -8,4 +8,6 @@ namespace zidian{
     long long CurrentTimeMicro();
 
     double CurrentTimeMillisDoubleFloat();
+
+    double CurrentTimeMircoDoubleFloat();
 }

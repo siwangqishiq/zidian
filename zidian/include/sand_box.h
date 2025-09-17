@@ -25,9 +25,9 @@ namespace zidian{
         GLFWwindow *m_window = nullptr;
 
         //记录上一帧的时间
-        double m_last_time_mills = 0.0f;
+        double m_last_time_micro = 0.0f;
         
-        float m_delta_time_mills = 0.0f;
+        double m_delta_time_micro = 0.0f;
         
         void updateTimeStamp();
         

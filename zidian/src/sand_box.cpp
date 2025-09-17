@@ -47,13 +47,13 @@ namespace zidian{
             m_app->onInit();
         }
 
-        m_last_time_mills = CurrentTimeMillisDoubleFloat();
+        m_last_time_micro = CurrentTimeMircoDoubleFloat();
         while(!glfwWindowShouldClose(m_window)) {
-            updateTimeStamp();
             glfwPollEvents();
+            updateTimeStamp();
 
             if(m_app != nullptr){
-                m_app->onTick(m_delta_time_mills);
+                m_app->onTick(m_delta_time_micro);
             }
 
             if(glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
@@ -72,9 +72,9 @@ namespace zidian{
     }
 
     void SandBox::updateTimeStamp(){
-        double cur_time = CurrentTimeMillisDoubleFloat();
-        m_delta_time_mills = cur_time - m_last_time_mills;
-        m_last_time_mills = cur_time;
+        double cur_time = CurrentTimeMircoDoubleFloat();
+        m_delta_time_micro = cur_time - m_last_time_micro;
+        m_last_time_micro = cur_time;
     }
 
     void SandBox::renderThreadFunc(){

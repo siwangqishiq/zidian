@@ -27,6 +27,11 @@ namespace zidian{
 
     double CurrentTimeMillisDoubleFloat(){
         long long t = CurrentTimeMillis();
-        return static_cast<double>(t) / 1000.0;
+        return static_cast<double>(t);
+    }
+
+    double CurrentTimeMircoDoubleFloat(){
+        long long t = CurrentTimeMicro();
+        return static_cast<double>(t);
     }
 }
