@@ -1,0 +1,11 @@
+#pragma once
+
+namespace zidian{
+    long CurrentTimeSeconds();
+
+    long long CurrentTimeMillis();
+
+    long long CurrentTimeMicro();
+
+    float CurrentTimeMillisFloat();
+}

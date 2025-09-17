@@ -9,6 +9,12 @@ public:
 
     virtual void onTick(){
         // zidian::Log::i("GameApp","onTick");
+        auto time_mirco = zidian::CurrentTimeMicro();
+        auto time_mil = zidian::CurrentTimeMillis();
+        auto time_flt = zidian::CurrentTimeMillisFloat();
+        auto time_seconds = zidian::CurrentTimeSeconds();
+        zidian::Log::i("GameApp","time :%lld  %lld  %f %lld",time_mirco, time_mil , 
+            time_flt, time_seconds);
     }
 
     virtual void onDispose(){
