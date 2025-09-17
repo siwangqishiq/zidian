@@ -10,8 +10,10 @@ namespace zidian{
     const std::string TAG = "zidian";
     bool UNITTEST = false;
 
+    AppParams Config;
+
     void SandBox::init(AppParams params){
-        m_params = params;
+        Config = params;
     }
 
     void SandBox::setApp(IApp *app){
@@ -22,22 +24,14 @@ namespace zidian{
         Log::w(TAG,"start main thread: %ld", std::this_thread::get_id());
         
         glfwInit();
-        this->m_window = glfwCreateWindow(800, 600, m_params.name.c_str(), nullptr, nullptr);
 
-
+        m_window = glfwCreateWindow(800, 600, Config.name.c_str(), nullptr, nullptr);
+        
         m_render_thread = std::thread([this](){
            renderThreadFunc();
         });
 
-        while(!glfwWindowShouldClose(m_window)) {
-            glfwPollEvents();
-            // glfwSwapInterval(1);//锁定固定帧率
-
-            if(glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
-                this->is_exit = true;
-                break;
-            }
-        }//end while
+        mainThreadFunc();
 
         this->is_exit = true;
         // std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -51,9 +45,40 @@ namespace zidian{
         return 0;
     }
 
+    void SandBox::mainThreadFunc(){
+        if(m_app != nullptr){
+            m_app->onInit();
+        }
+
+        while(!glfwWindowShouldClose(m_window)) {
+            glfwPollEvents();
+
+            if(m_app != nullptr){
+                m_app->onTick();
+            }
+
+            if(glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
+                this->is_exit = true;
+                break;
+            }
+
+            if(Config.vsync){
+                glfwSwapInterval(1);//锁定固定帧率
+            }
+        }//end while
+
+        if(m_app != nullptr){
+            m_app->onDispose();
+        }
+    }
+
     void SandBox::renderThreadFunc(){
         Log::w(TAG,"start render thread: %ld", std::this_thread::get_id());
+
         glfwMakeContextCurrent(m_window);
+
+        Render2d::getInstance();
+
         while(!this->is_exit){
             //  select render command queue  
             //  run command
