@@ -3,9 +3,14 @@
 
 class GameApp : public zidian::IApp{
 public:
+    zidian::SandBox *m_context;
+    GameApp(zidian::SandBox *context) : m_context(context){
+    }
+
     virtual void onInit(){
         zidian::Log::i("GameApp","onInit");
         // testJson();
+       testSchedule();
     }
 
     virtual void onTick(float delta_time_micro){
@@ -18,6 +23,22 @@ public:
 
     virtual ~GameApp(){
         zidian::Log::i("GameApp", "~GameApp destroy");
+    }
+
+    void testSchedule(){
+        // m_context->getMainTaskSchedule()->schedule([this](void *){
+        //     zidian::Log::green_log("logger", "run thread %lld main" , std::this_thread::get_id());
+
+        //     m_context->getRenderTaskSchedule()->scheduleAtFixedRate([](void *){
+        //         zidian::Log::blue_log("logger", "run render thread %lld" , std::this_thread::get_id());
+        //     } , 1000L);
+        // } , 3000L);
+
+        m_context->getMainTaskSchedule()->scheduleAtFixedRate([this](void *){
+            zidian::Log::green_log("logger", "logic fps:%d \t render fps: %d" , 
+                m_context->m_logic_fps,
+                m_context->m_render_fps);
+        } , 1000L);
     }
 
     void testJson(){
@@ -52,13 +73,13 @@ int main(int argc, char *argv[]){
     param.name = "sand_box_game";
     param.view_width = 1280;
     param.view_height = 800;
-    param.vsync = false;
     param.full_screen = false;
+    param.vsync = true;
     param.render_backend = zidian::RenderBackend::Opengl;
 
     sandBox.init(param);
     
-    GameApp *game = new GameApp();
+    GameApp *game = new GameApp(&sandBox);
     sandBox.setApp(game);
     int ret_code = sandBox.runLoop(argc, argv);
     delete game;

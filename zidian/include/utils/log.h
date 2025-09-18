@@ -50,6 +50,9 @@ namespace zidian{
             static void w(const std::string &tag , std::string msg);
             static void i(const std::string &tag , std::string msg);
 
+            static void green_log(const std::string &tag , std::string msg);
+            static void blue_log(const std::string &tag , std::string msg);
+
             static void log(std::string msg){
                 i(TAG ,msg);
             }
@@ -72,6 +75,16 @@ namespace zidian{
             template<typename... Args>
             static void log(const std::string format , Args... args){
                 log(FormatString(format , args...));
+            }
+
+            template<typename... Args>
+            static void green_log(const std::string &tag,const std::string format , Args... args){
+                green_log(tag , FormatString(format , args...));
+            }
+
+            template<typename... Args>
+            static void blue_log(const std::string &tag,const std::string format , Args... args){
+                blue_log(tag , FormatString(format , args...));
             }
             
             static std::string currentShowTime();
