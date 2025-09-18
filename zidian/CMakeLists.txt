@@ -34,10 +34,11 @@ else()
 endif()
 
 # 动态库
-# add_library(${PROJECT_NAME} SHARED ${SOURCES})
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 # 静态库
-add_library(${PROJECT_NAME} STATIC ${SOURCES})
+# add_library(${PROJECT_NAME} STATIC ${SOURCES})
+
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
 
 target_link_libraries(${PROJECT_NAME} glfw3)
