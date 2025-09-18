@@ -5,10 +5,25 @@ class GameApp : public zidian::IApp{
 public:
     virtual void onInit(){
         zidian::Log::i("GameApp","onInit");
+
+        testJson();
     }
 
     virtual void onTick(float delta_time_micro){
-        // zidian::Log::i("GameApp","onTick");
+        testTime(delta_time_micro);
+    }
+
+    void testJson(){
+        zidian::JsonObject obj;
+        obj.putInt("age",36);
+        obj.putString("name", L"紫电青霜");
+        auto str = obj.toJsonString();
+        zidian::Log::i("GameApp", "init json:%s", zidian::ToByteString(str).c_str());
+        zidian::WriteStringToFile("json.txt", str);
+    }
+
+    void testTime(float delta_time_micro){
+        zidian::Log::i("GameApp","onTick");
         auto time_mirco = zidian::CurrentTimeMicro();
         auto time_mil = zidian::CurrentTimeMillis();
         auto time_flt = zidian::CurrentTimeMillisDoubleFloat();
@@ -18,6 +33,8 @@ public:
             time_mirco, time_mil , 
             time_flt, time_micro_flt, 
             time_seconds , delta_time_micro);
+
+        zidian::Log::i("GameApp", "dealta time : %f mills", delta_time_micro / 1000.0f);
     }
 
     virtual void onDispose(){
@@ -25,6 +42,7 @@ public:
     }
 
     virtual ~GameApp(){
+        zidian::Log::i("GameApp", "~GameApp destroy");
     }
 };
 

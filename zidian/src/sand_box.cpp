@@ -81,7 +81,6 @@ namespace zidian{
         Log::w(TAG,"start render thread: %ld", std::this_thread::get_id());
 
         glfwMakeContextCurrent(m_window);
-
         Render2d::getInstance();
 
         while(!this->is_exit){
