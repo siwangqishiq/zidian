@@ -5,12 +5,19 @@ class GameApp : public zidian::IApp{
 public:
     virtual void onInit(){
         zidian::Log::i("GameApp","onInit");
-
-        testJson();
+        // testJson();
     }
 
     virtual void onTick(float delta_time_micro){
-        testTime(delta_time_micro);
+        // testTime(delta_time_micro);
+    }
+
+    virtual void onDispose(){
+        zidian::Log::i("GameApp","onDispose");
+    }
+
+    virtual ~GameApp(){
+        zidian::Log::i("GameApp", "~GameApp destroy");
     }
 
     void testJson(){
@@ -19,7 +26,7 @@ public:
         obj.putString("name", L"紫电青霜");
         auto str = obj.toJsonString();
         zidian::Log::i("GameApp", "init json:%s", zidian::ToByteString(str).c_str());
-        zidian::WriteStringToFile("json.txt", str);
+        // zidian::WriteStringToFile("json.txt", str);
     }
 
     void testTime(float delta_time_micro){
@@ -36,14 +43,6 @@ public:
 
         zidian::Log::i("GameApp", "dealta time : %f mills", delta_time_micro / 1000.0f);
     }
-
-    virtual void onDispose(){
-        zidian::Log::i("GameApp","onDispose");
-    }
-
-    virtual ~GameApp(){
-        zidian::Log::i("GameApp", "~GameApp destroy");
-    }
 };
 
 int main(int argc, char *argv[]){
@@ -51,7 +50,10 @@ int main(int argc, char *argv[]){
     zidian::AppParams param;
 
     param.name = "sand_box_game";
-    param.vsync = true;
+    param.view_width = 1280;
+    param.view_height = 800;
+    param.vsync = false;
+    param.full_screen = false;
     param.render_backend = zidian::RenderBackend::Opengl;
 
     sandBox.init(param);

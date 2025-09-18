@@ -6,6 +6,7 @@
 #include <atomic>
 
 class GLFWwindow;
+class GLFWmonitor;
 
 namespace zidian{
     class SandBox{
@@ -23,6 +24,7 @@ namespace zidian{
         std::atomic<bool> is_exit = false;
 
         GLFWwindow *m_window = nullptr;
+        GLFWmonitor *m_monitor = nullptr;
 
         //记录上一帧的时间
         double m_last_time_micro = 0.0f;

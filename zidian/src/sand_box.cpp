@@ -21,9 +21,17 @@ namespace zidian{
         Log::w(TAG,"start main thread: %ld", std::this_thread::get_id());
         
         glfwInit();
-
-        m_window = glfwCreateWindow(800, 600, Config.name.c_str(), nullptr, nullptr);
         
+        if(Config.full_screen){
+            m_monitor = glfwGetPrimaryMonitor();
+            const GLFWvidmode* vm = glfwGetVideoMode(m_monitor);
+            Config.view_width = vm->width;
+            Config.view_height = vm->height;
+        }
+
+        m_window = glfwCreateWindow(Config.view_width, Config.view_height, 
+            Config.name.c_str(), m_monitor, nullptr);
+
         m_render_thread = std::thread([this](){
            renderThreadFunc();
         });
