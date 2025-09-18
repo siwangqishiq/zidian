@@ -13,7 +13,7 @@ public:
         zidian::Log::i("GameApp","onInit");
         // testJson();
         testSchedule();
-        testThreadPool();
+        // testThreadPool();
     }
 
     virtual void onTick(float delta_time_micro){
@@ -58,7 +58,7 @@ public:
         // } , 3000L);
 
         m_context->getMainTaskSchedule()->scheduleAtFixedRate([this](void *){
-            zidian::Log::green_log("logger", "logic fps:%d \t render fps: %d" , 
+            zidian::Log::purple_log("logger", "logic fps:%d \t render fps: %d" , 
                 m_context->m_logic_fps,
                 m_context->m_render_fps);
         } , 1000L);
@@ -97,7 +97,7 @@ int main(int argc, char *argv[]){
     param.view_width = 1280;
     param.view_height = 800;
     param.full_screen = false;
-    param.vsync = true;
+    param.vsync = false;
     param.render_backend = zidian::RenderBackend::Opengl;
 
     sandBox.init(param);

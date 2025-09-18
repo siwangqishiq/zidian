@@ -33,6 +33,10 @@ namespace zidian{
     void Log::blue_log(const std::string &tag , std::string msg){
         LOGI(tag.c_str() , "%s" ,msg.c_str());
     }
+
+    void Log::purple_log(const std::string &tag , std::string msg){
+        LOGI(tag.c_str() , "%s" ,msg.c_str());
+    }
 #else
     void Log::e(const std::string &tag , std::string msg){
         if(UNITTEST){
@@ -62,6 +66,10 @@ namespace zidian{
 
     void Log::blue_log(const std::string &tag , std::string msg){
         printf(BLUE"%s[%s]:%s\n" NONE ,currentShowTime().c_str(), tag.c_str() , msg.c_str());
+    }
+
+    void Log::purple_log(const std::string &tag , std::string msg){
+        printf(PURPLE"%s[%s]:%s\n" NONE ,currentShowTime().c_str(), tag.c_str() , msg.c_str());
     }
 #endif
 
