@@ -4,13 +4,16 @@
 class GameApp : public zidian::IApp{
 public:
     zidian::SandBox *m_context;
+
+    zidian::ThreadPool *m_thread_pool = nullptr;
     GameApp(zidian::SandBox *context) : m_context(context){
     }
 
     virtual void onInit(){
         zidian::Log::i("GameApp","onInit");
         // testJson();
-       testSchedule();
+        testSchedule();
+        testThreadPool();
     }
 
     virtual void onTick(float delta_time_micro){
@@ -18,11 +21,31 @@ public:
     }
 
     virtual void onDispose(){
+        if(m_thread_pool != nullptr){
+            m_thread_pool->shutdown();
+            m_thread_pool = nullptr;
+        }
+        
         zidian::Log::i("GameApp","onDispose");
     }
 
     virtual ~GameApp(){
         zidian::Log::i("GameApp", "~GameApp destroy");
+    }
+
+    void testThreadPool(){
+        m_thread_pool = new zidian::ThreadPool(2, zidian::ScheduleMode::FIFO);
+        m_thread_pool->enqueue([](){
+            while(true){
+                std::cout << "A";
+            }
+            
+        });
+        m_thread_pool->enqueue([](){
+            while(true){
+                std::cout << "B";
+            }
+        });
     }
 
     void testSchedule(){
