@@ -35,19 +35,22 @@ namespace zidian{
         return nullptr;
     }
 
-    std::wstring ReadFileAsWstring(const char *path){
+    std::wstring ReadFileAsWstring(std::string path){
+        return ToWideString(ReadFileAsString(path));
+    }
+
+    std::string ReadFileAsString(std::string path){
         std::ifstream file(path);
         if(!file.is_open()){
-            Log::e("asset_manager" , "readtextFile %s is not existed!", path);
-            return L"";
+            Log::e("asset_manager" , "readtextFile %s is not existed!", path.c_str());
+            return "";
         }
 
         std::string str((std::istreambuf_iterator<char>(file)),
                     std::istreambuf_iterator<char>());
         file.close();
-        return ToWideString(str);
+        return str;
     }
-
 
     std::unique_ptr<AssetManager> AssetManager::m_instance = nullptr;
 
@@ -79,6 +82,12 @@ namespace zidian{
         std::string file_path = assetRootDir() + path;
         Log::i("asset_manager" , "read asset file path %s" , file_path.c_str());
         return ReadFileAsWstring(file_path.c_str());
+    }
+
+    std::string AssetManager::readAssetFileAsString(std::string path){
+        std::string file_path = assetRootDir() + path;
+        Log::i("asset_manager" , "read asset file path %s" , file_path.c_str());
+        return ReadFileAsString(file_path.c_str());
     }
 
     std::unique_ptr<uint8_t[]> AssetManager::readAssetFileAsBinary(std::string path, long &length){

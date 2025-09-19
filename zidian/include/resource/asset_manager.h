@@ -13,7 +13,9 @@ namespace zidian{
     }
     
     //从任意路径读取文本文件
-    std::wstring ReadFileAsWstring(const char *path);
+    std::wstring ReadFileAsWstring(std::string path);
+
+    std::string ReadFileAsString(std::string path);
 
     //二进制方式读取文件 
     std::unique_ptr<uint8_t[]> ReadFileAsBinary(std::string path , long &length);
@@ -29,6 +31,8 @@ namespace zidian{
         std::string assetRootDir();
 
         virtual std::wstring readAssetFileAsText(std::string path);
+
+        virtual std::string readAssetFileAsString(std::string path);
 
         virtual std::unique_ptr<uint8_t[]> readAssetFileAsBinary(std::string path, long &length);
     private:

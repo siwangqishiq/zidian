@@ -36,11 +36,11 @@ public:
     }
 
     void testAssetManager(){
-        zidian::Log::i("GameApp", "asset dir path:%s", 
-            zidian::AssetManager::getInstance()->assetRootDir().c_str());
+        // zidian::Log::i("GameApp", "asset dir path:%s", 
+        //     zidian::AssetManager::getInstance()->assetRootDir().c_str());
 
-        zidian::Log::i("GameApp", "read file size:%d", 
-            zidian::AssetManager::getInstance()->readAssetFileAsText("test.txt").length());
+        zidian::Log::i("GameApp", "read file size:%s", 
+            zidian::AssetManager::getInstance()->readAssetFileAsString("test.txt").c_str());
         long file_length = 0;
         auto data = zidian::AssetManager::getInstance()->readAssetFileAsBinary("test.txt", file_length);
         zidian::Log::i("GameApp", "read bin file size:%ld", file_length);
