@@ -1,5 +1,8 @@
 #include <iostream>
 #include "zidian.h"
+#include <string>
+
+std::string audio_path = "";
 
 class GameApp : public zidian::IApp{
 public:
@@ -15,7 +18,8 @@ public:
         // testJson();
         // testSchedule();
         // testThreadPool();
-        testAssetManager();
+        // testAssetManager();
+        testAudioPlay();
     }
 
     virtual void onTick(float delta_time_micro){
@@ -27,12 +31,30 @@ public:
             m_thread_pool->shutdown();
             m_thread_pool = nullptr;
         }
-        
+
+        zidian::AudioManager::getInstance()->dispose();
         zidian::Log::i("GameApp","onDispose");
     }
 
     virtual ~GameApp(){
         zidian::Log::i("GameApp", "~GameApp destroy");
+    }
+
+    void testAudioPlay(){
+        std::shared_ptr<zidian::AudioEntity> audio_entity;
+        if(audio_path.empty()){
+            audio_entity = zidian::AudioManager::getInstance()->loadAudio("audio/sandong.mp3","bgm",true);
+        }else{
+            zidian::Log::w("audio" , "play audio file: %s", audio_path.c_str());
+            audio_entity = zidian::AudioManager::getInstance()->loadAudio(audio_path,"bgm",true, false);
+        }
+        zidian::AudioManager::getInstance()->playAudio("bgm");
+
+        zidian::AudioManager::getInstance()->setAudioPlayProgressCallback(audio_entity, 
+            [](unsigned long cur, unsigned long total, double p){
+                zidian::Log::i("audio","progress : %u / %u", cur, total);
+            }
+        );
     }
 
     void testAssetManager(){
@@ -106,9 +128,13 @@ int main(int argc, char *argv[]){
     zidian::SandBox sandBox;
     zidian::AppParams param;
 
+    if(argc >= 2){
+        audio_path = argv[1];
+    }
+
     param.name = "sand_box_game";
-    param.view_width = 1280;
-    param.view_height = 800;
+    param.view_width = 800;
+    param.view_height = 600;
     param.full_screen = false;
     param.vsync = true;
     param.render_backend = zidian::RenderBackend::Opengl;

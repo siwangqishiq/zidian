@@ -16,6 +16,7 @@
 #include "widget/thread_pool.h"
 
 #include "resource/asset_manager.h"
+#include "audio/audio_manager.h"
 
 #include "render/render2d.h"
 
