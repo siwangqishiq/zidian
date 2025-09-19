@@ -2,6 +2,7 @@
 
 namespace zidian{
     bool UNITTEST = false;
-
+    
     AppParams Config;
+    GlobalVars Global;
 }

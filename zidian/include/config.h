@@ -12,6 +12,12 @@ namespace zidian{
         bool vsync = false;
         RenderBackend render_backend = RenderBackend::Opengl;
     };
+
+    struct GlobalVars{
+        int argc;
+        char **argv;
+    };
     
     extern AppParams Config;
+    extern GlobalVars Global;
 }

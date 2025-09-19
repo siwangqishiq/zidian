@@ -15,7 +15,10 @@
 #include "widget/task_schedule.h"
 #include "widget/thread_pool.h"
 
+#include "resource/asset_manager.h"
+
 #include "render/render2d.h"
+
 
 
 

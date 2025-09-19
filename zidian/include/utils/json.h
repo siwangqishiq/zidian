@@ -22,19 +22,6 @@ namespace zidian{
         return converter.to_bytes(input);
     }
 
-    inline void WriteStringToFile(const char *path , std::wstring content){
-        std::ofstream file(path);
-        file << ToByteString(content);
-        file.close();
-    }
-
-    inline std::wstring ReadTextFileAsWstring(const char *path){
-        std::ifstream file(path);
-        std::string str((std::istreambuf_iterator<char>(file)),
-                    std::istreambuf_iterator<char>());
-        return ToWideString(str);
-    }
-
     class JsonObject;
     class JsonArray;
 

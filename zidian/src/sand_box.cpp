@@ -18,6 +18,9 @@ namespace zidian{
     }
 
     int SandBox::runLoop(int argc, char **argv){
+        Global.argc = argc;
+        Global.argv = argv;
+        
         Log::w(TAG,"start main thread: %ld", std::this_thread::get_id());
         
         glfwInit();

@@ -6,14 +6,16 @@ public:
     zidian::SandBox *m_context;
 
     zidian::ThreadPool *m_thread_pool = nullptr;
+
     GameApp(zidian::SandBox *context) : m_context(context){
     }
 
     virtual void onInit(){
         zidian::Log::i("GameApp","onInit");
         // testJson();
-        testSchedule();
+        // testSchedule();
         // testThreadPool();
+        testAssetManager();
     }
 
     virtual void onTick(float delta_time_micro){
@@ -31,6 +33,17 @@ public:
 
     virtual ~GameApp(){
         zidian::Log::i("GameApp", "~GameApp destroy");
+    }
+
+    void testAssetManager(){
+        zidian::Log::i("GameApp", "asset dir path:%s", 
+            zidian::AssetManager::getInstance()->assetRootDir().c_str());
+
+        zidian::Log::i("GameApp", "read file size:%d", 
+            zidian::AssetManager::getInstance()->readAssetFileAsText("test.txt").length());
+        long file_length = 0;
+        auto data = zidian::AssetManager::getInstance()->readAssetFileAsBinary("test.txt", file_length);
+        zidian::Log::i("GameApp", "read bin file size:%ld", file_length);
     }
 
     void testThreadPool(){

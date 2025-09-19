@@ -42,3 +42,9 @@ add_library(${PROJECT_NAME} SHARED ${SOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
 
 target_link_libraries(${PROJECT_NAME} glfw3)
+
+# add_custom_command(TARGET zidian POST_BUILD
+#     COMMAND ${CMAKE_COMMAND} -E copy_directory
+#     ${CMAKE_SOURCE_DIR}/assets
+#     ${CMAKE_BINARY_DIR}/assets
+# )

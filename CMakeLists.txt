@@ -11,8 +11,8 @@ message("statrt to build ${app} ...")
 set(CMAKE_BUILD_TYPE Debug)
 
 # for dll import use case 
-set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)  
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})  
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -57,6 +57,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-
 
 # 安装 zidian 引擎头文件
 install(DIRECTORY zidian/include/ DESTINATION include)
+
 # 安装 zidian 生成的库（dll/so/lib）
 install(TARGETS zidian
         EXPORT zidianTargets
