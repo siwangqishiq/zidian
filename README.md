@@ -6,6 +6,6 @@
 
 ## Backend render API 
 
-- Opengl 4.3 
-- Vulkan
+- Opengl 4.1
+- Vulkan 1.3
 

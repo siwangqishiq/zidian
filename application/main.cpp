@@ -8,7 +8,9 @@ class GameApp : public zidian::IApp{
 public:
     zidian::SandBox *m_context;
     zidian::ThreadPool *m_thread_pool = nullptr;
-    
+
+    bool is_play = false;
+
     GameApp(zidian::SandBox *context) : m_context(context){
     }
 
@@ -20,12 +22,31 @@ public:
         // testAssetManager();
         // testAudioPlay();
         // testInput();
+
+        testInputAndAudio();
     }
 
     virtual void onTick(float delta_time_micro){
         // testTime(delta_time_micro);
-        zidian::Log::i("state","key space state :%d", 
-            zidian::InputManager::getInstance()->getKeyState(zidian::CODE_KEY_SPACE));
+        // zidian::Log::i("state","key space state :%d", 
+        //     zidian::InputManager::getInstance()->getKeyState(zidian::CODE_KEY_SPACE));
+
+        bool play = false;
+        if(zidian::InputManager::getInstance()->getKeyState(zidian::CODE_KEY_SPACE) ==
+            zidian::KEY_PRESS){
+            play = false;
+        }else{
+            play = true;
+        }
+
+        if(play != is_play){
+            if(play){
+                zidian::AudioManager::getInstance()->playAudio("bgm");
+            }else{
+                zidian::AudioManager::getInstance()->stopAudio("bgm");
+            }
+        }
+        is_play = play;
     }
 
     virtual void onDispose(){
@@ -41,6 +62,17 @@ public:
 
     virtual ~GameApp(){
         zidian::Log::i("GameApp", "~GameApp destroy");
+    }
+
+    void testInputAndAudio(){
+        if(audio_path.empty()){
+            auto music_audio = zidian::AudioManager::getInstance()->loadAudio("audio/sandong.mp3","bgm",true);
+        }else{
+            zidian::Log::w("audio" , "play audio file: %s", audio_path.c_str());
+            auto music_audio = zidian::AudioManager::getInstance()->loadAudio(audio_path,"bgm",true, false);
+        }
+        zidian::AudioManager::getInstance()->playAudio("bgm");
+        this->is_play = true;
     }
 
     void testInput(){

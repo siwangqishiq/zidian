@@ -8,10 +8,7 @@
 #include <string>
 #include "input/input_common.h"
 
-#ifndef __ANDROID__
-#define GLFW_INCLUDE_NONE
-#include "GLFW/glfw3.h"
-#endif
+class GLFWwindow;
 
 namespace zidian{
     struct InputEvent {

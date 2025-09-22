@@ -1,6 +1,10 @@
 #include "input/input_manager.h"
 #include "utils/log.h"
 
+#ifndef __ANDROID__
+#define GLFW_INCLUDE_NONE
+#include "GLFW/glfw3.h"
+#endif
 
 namespace zidian{
     std::unique_ptr<InputManager> InputManager::m_instance = nullptr;
