@@ -7,9 +7,8 @@ std::string audio_path = "";
 class GameApp : public zidian::IApp{
 public:
     zidian::SandBox *m_context;
-
     zidian::ThreadPool *m_thread_pool = nullptr;
-
+    
     GameApp(zidian::SandBox *context) : m_context(context){
     }
 
@@ -19,11 +18,14 @@ public:
         // testSchedule();
         // testThreadPool();
         // testAssetManager();
-        testAudioPlay();
+        // testAudioPlay();
+        // testInput();
     }
 
     virtual void onTick(float delta_time_micro){
         // testTime(delta_time_micro);
+        zidian::Log::i("state","key space state :%d", 
+            zidian::InputManager::getInstance()->getKeyState(zidian::CODE_KEY_SPACE));
     }
 
     virtual void onDispose(){
@@ -33,11 +35,20 @@ public:
         }
 
         zidian::AudioManager::getInstance()->dispose();
+        zidian::InputManager::getInstance()->clearCallback();
         zidian::Log::i("GameApp","onDispose");
     }
 
     virtual ~GameApp(){
         zidian::Log::i("GameApp", "~GameApp destroy");
+    }
+
+    void testInput(){
+        zidian::InputManager::getInstance()->addEventListener("input", 
+        [](zidian::InputEvent e){
+            zidian::Log::i("input_event", "input %d, %f %f", e.action, e.x, e.y);
+            return true;
+        });
     }
 
     void testAudioPlay(){
@@ -119,7 +130,7 @@ public:
             time_mirco, time_mil , 
             time_flt, time_micro_flt, 
             time_seconds , delta_time_micro);
-
+        
         zidian::Log::i("GameApp", "dealta time : %f mills", delta_time_micro / 1000.0f);
     }
 };

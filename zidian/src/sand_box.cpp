@@ -36,6 +36,90 @@ namespace zidian{
         m_window = glfwCreateWindow(Config.view_width, Config.view_height, 
             Config.name.c_str(), m_monitor, nullptr);
 
+        glfwSetKeyCallback(m_window , [](GLFWwindow* windows_,int key,
+                int scancode,int action,int mods){
+            zidian::InputEvent event;
+            event.code = key;
+            if(action == GLFW_PRESS){
+                event.action = zidian::EVENT_ACTION_KEYBOARD_PRESS;
+            }else if(action == GLFW_RELEASE){
+                event.action = zidian::EVENT_ACTION_KEYBOARD_RELEASE;
+            }else if(action == GLFW_REPEAT){
+                event.action = zidian::EVENT_ACTION_KEYBOARD_REPEAT;
+            }
+
+            zidian::InputManager::getInstance()->onEvent(event);
+        });
+
+        glfwSetCursorPosCallback(m_window , [](GLFWwindow* window, double xpos, 
+                double ypos){
+            if(zidian::InputManager::getInstance()->mouse_left_pressed){
+                zidian::InputEvent event;
+                event.action = zidian::EVENT_ACTION_MOVE;
+                event.x = xpos;
+                event.y = ypos;
+                zidian::InputManager::getInstance()->onEvent(event);
+            }
+            
+            if(zidian::InputManager::getInstance()->mouse_middle_pressed){
+                zidian::InputEvent event;
+                event.action = zidian::EVENT_ACTION_MOUSE_MIDDLE_MOVE;
+                event.x = xpos;
+                event.y = ypos;
+
+                zidian::InputManager::getInstance()->onEvent(event);
+            }
+            
+            if(zidian::InputManager::getInstance()->mouse_right_pressed){
+                zidian::InputEvent event;
+                event.action = zidian::EVENT_ACTION_MOUSE_RIGHT_MOVE;
+                event.x = xpos;
+                event.y = ypos;
+                
+                zidian::InputManager::getInstance()->onEvent(event);
+            }
+        });
+
+        glfwSetMouseButtonCallback(m_window , [](GLFWwindow* window, int button, int action, int mods){
+            zidian::InputEvent event;
+            
+            if(button == GLFW_MOUSE_BUTTON_LEFT){
+                if(action == GLFW_PRESS){
+                    zidian::InputManager::getInstance()->mouse_left_pressed = true;
+                    event.action = zidian::EVENT_ACTION_BEGIN; 
+                }else if(action == GLFW_RELEASE){
+                    zidian::InputManager::getInstance()->mouse_left_pressed = false;
+                    event.action = zidian::EVENT_ACTION_END;
+                }
+            }else if(button == GLFW_MOUSE_BUTTON_MIDDLE){
+                if(action == GLFW_PRESS){
+                    zidian::InputManager::getInstance()->mouse_middle_pressed = true;
+                    event.action = zidian::EVENT_ACTION_MOUSE_MIDDLE_BEGIN; 
+                }else if(action == GLFW_RELEASE){
+                    zidian::InputManager::getInstance()->mouse_middle_pressed = false;
+                    event.action = zidian::EVENT_ACTION_MOUSE_MIDDLE_END; 
+                }
+            }else if(button == GLFW_MOUSE_BUTTON_RIGHT){
+                if(action == GLFW_PRESS){
+                    zidian::InputManager::getInstance()->mouse_right_pressed = true;
+                    event.action = zidian::EVENT_ACTION_MOUSE_RIGHT_BEGIN; 
+                }else if(action == GLFW_RELEASE){
+                    zidian::InputManager::getInstance()->mouse_right_pressed = false;
+                    event.action = zidian::EVENT_ACTION_MOUSE_RIGHT_END; 
+                }
+            }
+            double x = 0;
+            double y = 0;
+            glfwGetCursorPos(window, &x, &y);
+            event.x = x;
+            event.y = y;
+
+            zidian::InputManager::getInstance()->onEvent(event);
+        });
+
+        glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* windows_,int w,int h){
+        });
+
         m_render_thread = std::thread([this](){
            renderThreadFunc();
         });
@@ -59,6 +143,8 @@ namespace zidian{
         m_last_time_micro = CurrentTimeMircoDoubleFloat();
         int fps_counter = 0;
         double elapsed_time = 0.0f;
+        
+        InputManager::getInstance()->setWindowInstance(m_window);
 
         while(!glfwWindowShouldClose(m_window)) {
             glfwPollEvents();
