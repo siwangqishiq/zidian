@@ -147,11 +147,15 @@ namespace zidian{
         InputManager::getInstance()->setWindowInstance(m_window);
 
         while(!glfwWindowShouldClose(m_window)) {
+            std::vector<CmdQueueType>& buffer = Render2d::getInstance()->getCommandBuffer();
+            buffer.clear();
+
             glfwPollEvents();
             if(glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
                 this->is_exit = true;
                 break;
             }
+
             updateTimeStamp(elapsed_time , fps_counter);
 
             if(m_app != nullptr){
@@ -162,6 +166,7 @@ namespace zidian{
                 m_main_task_schedule->tick();
             }
 
+            Render2d::getInstance()->submitCommandBuffer();
         }//end while
 
         if(m_main_task_schedule != nullptr){
@@ -201,8 +206,7 @@ namespace zidian{
 
         glfwSwapInterval(Config.vsync?1:0);//启动垂直同步
         while(!this->is_exit){
-            //  select render command queue  
-            //  run command
+            Render2d::getInstance()->executeRenderCommands();
 
             if(m_render_task_schedule != nullptr){
                 m_render_task_schedule->tick();

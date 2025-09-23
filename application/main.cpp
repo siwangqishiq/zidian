@@ -17,20 +17,40 @@ public:
     virtual void onInit(){
         zidian::Log::i("GameApp","onInit");
         // testJson();
-        // testSchedule();
+        testSchedule();
         // testThreadPool();
         // testAssetManager();
         // testAudioPlay();
         // testInput();
 
-        testInputAndAudio();
+        // testInputAndAudio();
     }
 
     virtual void onTick(float delta_time_micro){
         // testTime(delta_time_micro);
         // zidian::Log::i("state","key space state :%d", 
         //     zidian::InputManager::getInstance()->getKeyState(zidian::CODE_KEY_SPACE));
+        // testPlayAudioTick();
+        zidian::Render2d::getInstance()->drawPoint(1.0f, 2.0f, glm::vec4(0.0f, 0.0f , 0.0f , 1.0f));
+        zidian::Render2d::getInstance()->drawPoint(3.0f, 4.0f, glm::vec4(0.0f, 0.0f , 0.0f , 1.0f));
+    }
 
+    virtual void onDispose(){
+        if(m_thread_pool != nullptr){
+            m_thread_pool->shutdown();
+            m_thread_pool = nullptr;
+        }
+
+        zidian::AudioManager::getInstance()->dispose();
+        zidian::InputManager::getInstance()->clearCallback();
+        zidian::Log::i("GameApp","onDispose");
+    }
+
+    virtual ~GameApp(){
+        zidian::Log::i("GameApp", "~GameApp destroy");
+    }
+
+    void testPlayAudioTick(){
         bool play = false;
         if(zidian::InputManager::getInstance()->getKeyState(zidian::CODE_KEY_SPACE) ==
             zidian::KEY_PRESS){
@@ -47,21 +67,6 @@ public:
             }
         }
         is_play = play;
-    }
-
-    virtual void onDispose(){
-        if(m_thread_pool != nullptr){
-            m_thread_pool->shutdown();
-            m_thread_pool = nullptr;
-        }
-
-        zidian::AudioManager::getInstance()->dispose();
-        zidian::InputManager::getInstance()->clearCallback();
-        zidian::Log::i("GameApp","onDispose");
-    }
-
-    virtual ~GameApp(){
-        zidian::Log::i("GameApp", "~GameApp destroy");
     }
 
     void testInputAndAudio(){
@@ -179,7 +184,7 @@ int main(int argc, char *argv[]){
     param.view_width = 800;
     param.view_height = 600;
     param.full_screen = false;
-    param.vsync = true;
+    param.vsync = false;
     param.render_backend = zidian::RenderBackend::Opengl;
 
     sandBox.init(param);
