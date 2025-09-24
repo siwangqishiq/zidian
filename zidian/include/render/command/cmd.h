@@ -3,13 +3,17 @@
 #include <memory>
 
 namespace zidian{
+    class IRender;
     class Cmd{
     public:
-        Cmd();
+        Cmd(IRender *render):m_render(render){}
+        
         virtual ~Cmd();
         virtual void execute();
+    protected:
+        IRender *m_render;
     };
 
-    typedef std::shared_ptr<Cmd> CmdQueueType;
+    using CmdQueueType = std::shared_ptr<Cmd>;
     // typedef Cmd* CmdQueueType;
 }

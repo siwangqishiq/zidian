@@ -141,7 +141,7 @@ public:
         // } , 3000L);
 
         m_context->getMainTaskSchedule()->scheduleAtFixedRate([this](void *){
-            zidian::Log::purple_log("logger", "logic fps:%d \t render fps: %d" , 
+            zidian::Log::blue_log("logger", "logic fps:%d \t render fps: %d" , 
                 m_context->m_logic_fps,
                 m_context->m_render_fps);
         } , 1000L);
@@ -184,7 +184,7 @@ int main(int argc, char *argv[]){
     param.view_width = 800;
     param.view_height = 600;
     param.full_screen = false;
-    param.vsync = true;
+    param.vsync = false;
     param.window_boardless = false;
     param.render_backend = zidian::RenderBackend::Opengl;
 

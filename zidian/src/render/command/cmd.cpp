@@ -2,9 +2,6 @@
 #include "utils/log.h"
 
 namespace zidian{
-    Cmd::Cmd(){
-    }
-
     Cmd::~Cmd(){
     }
 

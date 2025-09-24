@@ -70,7 +70,8 @@ namespace zidian{
     }
 
     void Render2d::drawPoint(float x, float y, glm::vec4 color){
-        auto cmd = std::make_shared<CmdDrawPoint>(x,y,color);
+        auto cmd = std::make_shared<CmdDrawPoint>(m_render.get());
+        cmd->putParams(x, y, color);
         addCmd(cmd);
     }
 }

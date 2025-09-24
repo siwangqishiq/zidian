@@ -22,7 +22,7 @@ namespace zidian{
         static const int QUEUE_COUNT = 2;
 
         std::vector<CmdQueueType> m_buffers[QUEUE_COUNT];
-
+        
         std::atomic<int> m_front_index;
         std::atomic<int> m_back_index;
         std::atomic<bool> m_ready;

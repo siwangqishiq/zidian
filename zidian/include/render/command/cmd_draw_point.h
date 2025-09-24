@@ -4,11 +4,14 @@
 #include "glm/glm.hpp"
 
 namespace zidian{
+    class IRender;
     class CmdDrawPoint : public Cmd{
     public:
-        virtual void execute() override;
+        CmdDrawPoint(IRender *render):Cmd(render){}
 
-        CmdDrawPoint(float x,float y, glm::vec4 color);
+        void putParams(float x, float y, glm::vec4 color);
+
+        virtual void execute() override;
 
         ~CmdDrawPoint();
     private:

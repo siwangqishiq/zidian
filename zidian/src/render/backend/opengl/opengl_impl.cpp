@@ -7,7 +7,10 @@ namespace zidian{
         return 0;
     }
 
-
+    void OpenglRender::drawPoint(float &x, float &y , glm::vec4 &color){
+        Log::w("render", "OpenglRender::drawPoint %f, %f color:%f,%f,%f",
+            x, y, color[0],color[1],color[2]);
+    }
 }
 
 
