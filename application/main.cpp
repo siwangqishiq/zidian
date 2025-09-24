@@ -31,6 +31,9 @@ public:
         // zidian::Log::i("state","key space state :%d", 
         //     zidian::InputManager::getInstance()->getKeyState(zidian::CODE_KEY_SPACE));
         // testPlayAudioTick();
+
+        zidian::Render2d::getInstance()->clearScreen();
+
         zidian::Render2d::getInstance()->drawPoint(1.0f, 2.0f, glm::vec4(0.0f, 0.0f , 0.0f , 1.0f));
         zidian::Render2d::getInstance()->drawPoint(3.0f, 4.0f, glm::vec4(0.0f, 0.0f , 0.0f , 1.0f));
     }
@@ -184,9 +187,10 @@ int main(int argc, char *argv[]){
     param.view_width = 800;
     param.view_height = 600;
     param.full_screen = false;
-    param.vsync = false;
+    param.vsync = true;
     param.window_boardless = false;
     param.render_backend = zidian::RenderBackend::Opengl;
+    param.clear_color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
 
     sandBox.init(param);
     

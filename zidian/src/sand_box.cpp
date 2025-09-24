@@ -6,6 +6,8 @@
 #include "GLFW/glfw3.h"
 #endif
 
+#include "render/irender.h"
+
 namespace zidian{
     const std::string TAG = "zidian";
 
@@ -36,6 +38,8 @@ namespace zidian{
         if(Config.window_boardless){
             glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
         }
+
+        Render2d::getInstance()->init();
 
         m_window = glfwCreateWindow(Config.view_width, Config.view_height, 
             Config.name.c_str(), m_monitor, nullptr);
@@ -137,7 +141,10 @@ namespace zidian{
         return 0;
     }
 
+    //主线程
     void SandBox::mainThreadFunc(){
+        Render2d::getInstance()->onRenderStart();
+        
         m_main_task_schedule = std::make_unique<TaskSchedule>();
 
         if(m_app != nullptr){
@@ -152,25 +159,25 @@ namespace zidian{
 
         while(!glfwWindowShouldClose(m_window)) {
             Render2d::getInstance()->getCommandBuffer().clear();
-            glfwPollEvents();
 
+            //handle input
+            glfwPollEvents();
             if(glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
                 this->is_exit = true;
                 Render2d::getInstance()->submitCommandBuffer();
                 break;
             }
 
-            updateTimeStamp(elapsed_time , fps_counter);
-
             if(m_app != nullptr){
                 m_app->onTick(m_delta_time_micro);
             }
-            
+
             if(m_main_task_schedule != nullptr){
                 m_main_task_schedule->tick();
             }
 
             Render2d::getInstance()->submitCommandBuffer();
+            updateTimeStamp(elapsed_time , fps_counter);
         }//end while
 
         if(m_main_task_schedule != nullptr){
@@ -180,29 +187,20 @@ namespace zidian{
         if(m_app != nullptr){
             m_app->onDispose();
         }
+
+        Render2d::getInstance()->dispose();
     }
 
-    void SandBox::updateTimeStamp(double &elapsed_time, int &fps_counter){
-        double cur_time = CurrentTimeMircoDoubleFloat();
-        m_delta_time_micro = cur_time - m_last_time_micro;
-        m_last_time_micro = cur_time;
-
-        elapsed_time += m_delta_time_micro;
-        if(elapsed_time >= 1000000.0f){
-            m_logic_fps = fps_counter;
-            elapsed_time = 0.0f;
-            fps_counter = 0;
-        }else{
-            fps_counter++;
-        }
-    }
-
+    //渲染线程
     void SandBox::renderThreadFunc(){
         Log::w(TAG,"start render thread: %ld", std::this_thread::get_id());
 
         glfwMakeContextCurrent(m_window);
         m_render_task_schedule = std::make_unique<TaskSchedule>();
-        Render2d::getInstance();
+        auto render = Render2d::getInstance()->getRender();
+
+        render->initEvironment();
+        render->setClearColor(Config.clear_color);
 
         double elapsed_time = 0.0f;
         double last_time = CurrentTimeMircoDoubleFloat();
@@ -236,5 +234,20 @@ namespace zidian{
         }
 
         glfwMakeContextCurrent(nullptr);
+    }
+
+    void SandBox::updateTimeStamp(double &elapsed_time, int &fps_counter){
+        double cur_time = CurrentTimeMircoDoubleFloat();
+        m_delta_time_micro = cur_time - m_last_time_micro;
+        m_last_time_micro = cur_time;
+
+        elapsed_time += m_delta_time_micro;
+        if(elapsed_time >= 1000000.0f){
+            m_logic_fps = fps_counter;
+            elapsed_time = 0.0f;
+            fps_counter = 0;
+        }else{
+            fps_counter++;
+        }
     }
 }

@@ -2,8 +2,16 @@
 
 #include "render/render2d.h"
 #include <string>
+#include "glm/glm.hpp"
 
 namespace zidian{
+    using ColorType = glm::vec4;
+
+    struct GlobalVars{
+        int argc;
+        char **argv;
+    };
+    
     struct AppParams{
         std::string name = "zidian_game";
         int view_width = 1280;
@@ -12,14 +20,10 @@ namespace zidian{
         bool vsync = false;
         bool window_boardless = false;
 
+        ColorType clear_color{0.0f, 0.0f, 0.0f, 1.0f};
         RenderBackend render_backend = RenderBackend::Opengl;
     };
 
-    struct GlobalVars{
-        int argc;
-        char **argv;
-    };
-    
     extern AppParams Config;
     extern GlobalVars Global;
 }

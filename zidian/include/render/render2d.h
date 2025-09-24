@@ -26,11 +26,24 @@ namespace zidian{
 
         void executeRenderCommands();
 
+        void init();
+
+        void onRenderStart();
+
+        void dispose();
+
+        std::shared_ptr<IRender> getRender(){
+            return m_render;
+        }
+
         std::vector<CmdQueueType>& getCommandBuffer();
 
         void submitCommandBuffer();
 
         void addCmd(CmdQueueType cmd);
+
+        //清理屏幕
+        void clearScreen();
 
         void drawPoint(float x, float y, glm::vec4 color);
     private:

@@ -2,14 +2,14 @@
 #include "utils/log.h"
 
 namespace zidian{
-    int VulkanRender::initEnv(){
-        Log::w("render", "init Vulkan render environment");
+    int VulkanRender::init(){
+        Log::w("render", "init Vulkan render");
         return 0;
     }
 
-    void VulkanRender::drawPoint(float &x, float &y , glm::vec4 &color){
-        Log::w("render", "VulkanRender::drawPoint %f, %f color:%f,%f,%f",
-            x, y, color[0],color[1],color[2]);
+    int VulkanRender::initEvironment(){
+        Log::w("render", "init Vulkan render initEvironment");
+        return 0;
     }
 }
 

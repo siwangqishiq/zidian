@@ -4,7 +4,7 @@
 
 namespace zidian{
     class VulkanRender : public IRender{
-        virtual int initEnv();
-        virtual void drawPoint(float &x, float &y , glm::vec4 &color);
+        virtual int init() override;
+        virtual int initEvironment() override;
     };
 }
