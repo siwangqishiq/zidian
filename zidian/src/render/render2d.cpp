@@ -9,6 +9,7 @@
 #include "render/command/cmd.h"
 #include "render/command/cmd_clear.h"
 #include "render/command/cmd_draw_point.h"
+#include "render/command/cmd_set_clear_color.h"
 
 namespace zidian{
     const std::string Render2d::TAG = "render2d";
@@ -63,7 +64,6 @@ namespace zidian{
         for(CmdQueueType& cmd : cmds){
             cmd->execute();
         }
-        // cmds.clear();
         // Log::blue_log("render_thread" , "executeRenderCommands end. %d", std::this_thread::get_id());
     }
 
@@ -76,12 +76,17 @@ namespace zidian{
     }
 
     void Render2d::addCmd(CmdQueueType cmd){
-        std::vector<CmdQueueType>& buffer = m_command_queue->getWriteBuffer();
-        buffer.emplace_back(cmd);
+        m_command_queue->getWriteBuffer().emplace_back(cmd);
     }
 
     void Render2d::clearScreen(){
         addCmd(std::make_shared<CmdClear>(m_render.get()));
+    }
+
+    void Render2d::setClearColor(ColorType color){
+        auto cmd = std::make_shared<CmdSetClearColor>(m_render.get());
+        cmd->putParams(color);
+        addCmd(cmd);
     }
 
     void Render2d::drawPoint(float x, float y, glm::vec4 color){

@@ -45,6 +45,8 @@ namespace zidian{
         //清理屏幕
         void clearScreen();
 
+        void setClearColor(ColorType color);
+
         void drawPoint(float x, float y, glm::vec4 color);
     private:
         static std::mutex m_mutex;

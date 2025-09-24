@@ -1,12 +1,11 @@
 #pragma once
 
+#include "constants/types.h"
 #include "render/render2d.h"
 #include <string>
 #include "glm/glm.hpp"
 
 namespace zidian{
-    using ColorType = glm::vec4;
-
     struct GlobalVars{
         int argc;
         char **argv;

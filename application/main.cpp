@@ -1,6 +1,7 @@
 #include <iostream>
 #include "zidian.h"
 #include <string>
+#include <cmath>
 
 std::string audio_path = "";
 
@@ -11,18 +12,22 @@ public:
 
     bool is_play = false;
 
+    float m_color_red = 0.0f;
+    float m_delta_time = 0.0f;
+
     GameApp(zidian::SandBox *context) : m_context(context){
     }
 
     virtual void onInit(){
         zidian::Log::i("GameApp","onInit");
+        printFpsLog();
+        
         // testJson();
-        testSchedule();
+        // testSchedule();
         // testThreadPool();
         // testAssetManager();
         // testAudioPlay();
         // testInput();
-
         // testInputAndAudio();
     }
 
@@ -33,9 +38,13 @@ public:
         // testPlayAudioTick();
 
         zidian::Render2d::getInstance()->clearScreen();
-
         zidian::Render2d::getInstance()->drawPoint(1.0f, 2.0f, glm::vec4(0.0f, 0.0f , 0.0f , 1.0f));
         zidian::Render2d::getInstance()->drawPoint(3.0f, 4.0f, glm::vec4(0.0f, 0.0f , 0.0f , 1.0f));
+
+        m_delta_time += delta_time_micro/1000000.0f;
+        m_color_red = 0.5f * std::sin(m_delta_time) + 0.5f;
+        // zidian::Log::i("tick","key space color :%f   time : %f", m_color_red , m_delta_time);
+        zidian::Render2d::getInstance()->setClearColor(glm::vec4(m_color_red, 0.0f, 1.0f - m_color_red ,1.0f));
     }
 
     virtual void onDispose(){
@@ -134,20 +143,16 @@ public:
         });
     }
 
-    void testSchedule(){
-        // m_context->getMainTaskSchedule()->schedule([this](void *){
-        //     zidian::Log::green_log("logger", "run thread %lld main" , std::this_thread::get_id());
-
-        //     m_context->getRenderTaskSchedule()->scheduleAtFixedRate([](void *){
-        //         zidian::Log::blue_log("logger", "run render thread %lld" , std::this_thread::get_id());
-        //     } , 1000L);
-        // } , 3000L);
-
+    void printFpsLog(){
         m_context->getMainTaskSchedule()->scheduleAtFixedRate([this](void *){
             zidian::Log::blue_log("logger", "logic fps:%d \t render fps: %d" , 
                 m_context->m_logic_fps,
                 m_context->m_render_fps);
         } , 1000L);
+    }
+
+    void testSchedule(){
+        printFpsLog();
     }
 
     void testJson(){
