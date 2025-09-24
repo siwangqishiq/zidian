@@ -10,6 +10,8 @@ namespace zidian{
         int view_height = 800;
         bool full_screen = false;
         bool vsync = false;
+        bool window_boardless = false;
+
         RenderBackend render_backend = RenderBackend::Opengl;
     };
 

@@ -36,8 +36,5 @@ namespace zidian{
         m_back_index.store(old_front, std::memory_order_release);
 
         m_ready.store(true, std::memory_order_release);
-
-        // Log::e("debug","m_front_index = %d, m_back_index = %d", 
-        //     m_front_index.load(), m_back_index.load());
     }
 }

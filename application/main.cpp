@@ -184,7 +184,8 @@ int main(int argc, char *argv[]){
     param.view_width = 800;
     param.view_height = 600;
     param.full_screen = false;
-    param.vsync = false;
+    param.vsync = true;
+    param.window_boardless = false;
     param.render_backend = zidian::RenderBackend::Opengl;
 
     sandBox.init(param);

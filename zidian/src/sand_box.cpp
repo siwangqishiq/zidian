@@ -33,6 +33,10 @@ namespace zidian{
             Log::i(TAG, "full set screen size : %d x %d", Config.view_width, Config.view_height);
         }
 
+        if(Config.window_boardless){
+            glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+        }
+
         m_window = glfwCreateWindow(Config.view_width, Config.view_height, 
             Config.name.c_str(), m_monitor, nullptr);
 
@@ -147,12 +151,12 @@ namespace zidian{
         InputManager::getInstance()->setWindowInstance(m_window);
 
         while(!glfwWindowShouldClose(m_window)) {
-            std::vector<CmdQueueType>& buffer = Render2d::getInstance()->getCommandBuffer();
-            buffer.clear();
-
+            Render2d::getInstance()->getCommandBuffer().clear();
             glfwPollEvents();
+
             if(glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
                 this->is_exit = true;
+                Render2d::getInstance()->submitCommandBuffer();
                 break;
             }
 
