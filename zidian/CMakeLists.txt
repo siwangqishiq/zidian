@@ -16,10 +16,20 @@ if (WIN32)
     # set(GLFW_LIB ${CMAKE_SOURCE_DIR}/lib/windows/libglfw3.a)
 
     add_library(glfw3 STATIC IMPORTED)
-    set_target_properties(glfw3 PROPERTIES
-        IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/zidian/lib/windows/libglfw3.a
-        INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/zidian/vender/glfw/include
-    )
+
+    if (MSVC)
+        message(STATUS "Using Windows MSVC compiler")
+        set_target_properties(glfw3 PROPERTIES
+            IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/zidian/lib/windows_msvc/glfw3.lib
+            INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/zidian/vender/glfw/include
+        )
+    else()
+        message(STATUS "Using Windows msys urt64 compiler")
+        set_target_properties(glfw3 PROPERTIES
+            IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/zidian/lib/windows/libglfw3.a
+            INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/zidian/vender/glfw/include
+        )
+    endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(STATUS "Using Linux library")
     # link_directories(${CMAKE_SOURCE_DIR}/lib/linux)
@@ -39,7 +49,12 @@ add_library(${PROJECT_NAME} SHARED ${SOURCES})
 # 静态库
 # add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+if (MSVC)
+    set_target_properties(${PROJECT_NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+else()
+    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+endif()
+
 
 target_link_libraries(${PROJECT_NAME} glfw3)
 

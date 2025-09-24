@@ -10,10 +10,20 @@ message("statrt to build ${app} ...")
 # debug  release should remove this line
 set(CMAKE_BUILD_TYPE Debug)
 
-# for dll import use case 
-set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})  
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+if (MSVC)
+     # MSVC 要区分 Debug/Release
+    foreach(OUTPUTCONFIG IN LISTS CMAKE_CONFIGURATION_TYPES)
+        string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG)
+        set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR}/lib/${OUTPUTCONFIG})
+        set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR}/bin/${OUTPUTCONFIG})
+        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR}/bin/${OUTPUTCONFIG})
+    endforeach()
+else()
+    # for dll import use case 
+    set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})  
+    set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+    set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -48,7 +58,12 @@ add_executable(${PROJECT_NAME} ${APP_SRCS})
 target_link_libraries(${PROJECT_NAME} PRIVATE zidian)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-Wall")
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+
+if (MSVC)
+else()
+    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+endif()
+
 # set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-mwindows")
 
 # -------------------------
