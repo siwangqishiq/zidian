@@ -1,6 +1,7 @@
 #pragma once
 
 #include "glm/glm.hpp"
+#include "config.h"
 
 namespace zidian{
     class IRender{
@@ -9,6 +10,8 @@ namespace zidian{
         virtual int initEvironment() = 0;
 
         virtual void dispose();
+
+        virtual void onSizeChanged(int view_width, int view_height);
 
         virtual ~IRender(){};           
 

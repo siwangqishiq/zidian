@@ -9,6 +9,8 @@
 #include "config.h"
 
 namespace zidian{
+    const std::string OpenglRender::UNIFORM_NAME_SCRTONDC_MAT = "uScreenToNdcMat";
+
     int OpenglRender::init() {
         Log::w("render", "init OpengGL render");
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -37,9 +39,25 @@ namespace zidian{
         m_vao = vaos[0];
 
         glEnable(GL_PROGRAM_POINT_SIZE);
-        glViewport(0, 0, Config.view_width, Config.view_height);
-
+        
+        onSizeChanged(Config.view_width, Config.view_height);
         prepareDrawPoint();
+    }
+
+    void OpenglRender::onSizeChanged(int view_width, int view_height){
+        m_screen_ndc_matrix[0][0] = 2.0f / view_width;
+        m_screen_ndc_matrix[0][1] = 0.0f;
+        m_screen_ndc_matrix[0][2] = 0.0f;
+
+        m_screen_ndc_matrix[1][0] = 0.0f;
+        m_screen_ndc_matrix[1][1] = -2.0f / view_height;
+        m_screen_ndc_matrix[1][2] = 0.0f;
+
+        m_screen_ndc_matrix[2][0] = -1.0f;
+        m_screen_ndc_matrix[2][1] =  1.0f;
+        m_screen_ndc_matrix[2][2] =  1.0f;
+
+        glViewport(0, 0, view_width, view_height);
     }
 
     void OpenglRender::prepareDrawPoint(){
@@ -73,6 +91,7 @@ namespace zidian{
 
         // Log::i("opengl_render", "draw_point_shader programID = %u", draw_point_shader.m_programId);
         draw_point_shader.useShader();
+        draw_point_shader.setUniformMat3(UNIFORM_NAME_SCRTONDC_MAT, m_screen_ndc_matrix);
 
         //update data
         float pointPos[2 + 4] = { x, y , color[0], color[1], color[2], color[3]};

@@ -25,6 +25,12 @@ namespace zidian{
 
         ~Render2d();
 
+        int getViewWidth();
+
+        int getViewHeight();
+
+        void onSizeChanged(int view_width, int view_height);
+
         void instanceRenderBackend();
 
         void executeRenderCommands();

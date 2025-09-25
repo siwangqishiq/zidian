@@ -8,12 +8,18 @@
 namespace zidian{
     class OpenglRender : public IRender{
     public:
+        static const std::string UNIFORM_NAME_SCRTONDC_MAT;
+
+        glm::mat3 m_screen_ndc_matrix;
+
+        virtual void onSizeChanged(int view_width, int view_height) override;
+
         virtual int init() override;
 
         virtual int initEvironment() override;
 
         virtual void dispose() override;
-
+        
         virtual void clear() override;
         virtual void setClearColor(glm::vec4 clear_color) override;
         virtual void drawPoint(float &x, float &y , glm::vec4 &color) override;

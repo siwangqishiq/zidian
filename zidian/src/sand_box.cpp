@@ -126,8 +126,17 @@ namespace zidian{
         });
 
         glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* windows_,int w,int h){
+            SandBox* sandbox = static_cast<SandBox *>(glfwGetWindowUserPointer(windows_));
+            sandbox->getRenderTaskSchedule()->schedule([w,h](void *){
+                zidian::Render2d::getInstance()->onSizeChanged(w, h);
+            },0);
+            
+            if(sandbox->m_app != nullptr){
+                sandbox->m_app->onResize(w, h);
+            }
         });
 
+        glfwSetWindowUserPointer(m_window, static_cast<void *>(this));
         m_render_thread = std::thread([this](){
            renderThreadFunc();
         });

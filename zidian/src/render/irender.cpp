@@ -1,6 +1,9 @@
 #include "render/irender.h"
 
 namespace zidian{
+    void IRender::onSizeChanged(int view_width, int view_height){
+    }
+
     void IRender::drawPoint(float &x, float &y , glm::vec4 &color){
     }
 

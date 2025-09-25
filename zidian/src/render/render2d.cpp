@@ -32,18 +32,40 @@ namespace zidian{
         m_command_queue = std::make_unique<CommandQueue>();
     }
 
+    int Render2d::getViewWidth(){
+        return Config.view_width;
+    }
+
+    int Render2d::getViewHeight(){
+        return Config.view_height;
+    }
+
+    // 创建不同的图形API后端
+    // 目前先仅支持 Opengl/opengles 4.1
+    // 后续添加 Vulkan DirectX_12 等的支持
     void Render2d::instanceRenderBackend(){
         if(Config.render_backend == RenderBackend::Opengl){
             m_render = std::make_shared<OpenglRender>();
         }else if(Config.render_backend == RenderBackend::Vulkan){
             m_render = std::make_shared<VulkanRender>();
         }else{
+            //other graph backend
         }
     }
 
     void Render2d::init(){
         if(m_render != nullptr){
             m_render->init();
+        }
+    }
+
+    void Render2d::onSizeChanged(int view_width, int view_height){
+        Log::i("render2d", "window size change to %d, %d", view_width , view_height);
+        Config.view_width = view_width;
+        Config.view_height = view_height;
+
+        if(m_render != nullptr){
+            m_render->onSizeChanged(view_width, view_height);
         }
     }
 

@@ -2,9 +2,9 @@
 
 namespace zidian{
     enum RenderBackend{
-        Opengl = 0,
+        Opengl = 0,//OpenGL 4.1 
         Vulkan = 1,
-        Directx12 = 2,
+        DirectX12 = 2,
         Metal = 3
     };
 }
