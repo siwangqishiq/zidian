@@ -56,15 +56,14 @@ endif()
 add_executable(${PROJECT_NAME} ${APP_SRCS})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE zidian)
-
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-Wall")
 
 if (MSVC)
+    ignore_warning_msvc()
 else()
     set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+    set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-mwindows")
 endif()
-
-# set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-mwindows")
 
 # -------------------------
 # 安装规则

@@ -9,6 +9,9 @@
 namespace zidian{
     class CommandQueue{
     public:
+        CommandQueue(const CommandQueue&) = delete;
+        CommandQueue& operator=(const CommandQueue&) = delete;
+
         CommandQueue();
 
         ~CommandQueue();

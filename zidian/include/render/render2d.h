@@ -18,6 +18,9 @@ namespace zidian{
         
         static std::unique_ptr<Render2d>& getInstance();
 
+        Render2d(const Render2d&) = delete;
+        Render2d& operator=(const Render2d&) = delete;    
+
         Render2d();
 
         ~Render2d();

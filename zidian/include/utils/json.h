@@ -28,6 +28,8 @@ namespace zidian{
     class IJson{
     public:
         virtual std::wstring toJsonString() = 0;
+
+        virtual ~IJson(){}
     };
 
     enum JsonValueType{
