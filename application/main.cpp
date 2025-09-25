@@ -38,13 +38,7 @@ public:
         // testPlayAudioTick();
 
         zidian::Render2d::getInstance()->clearScreen();
-        zidian::Render2d::getInstance()->drawPoint(1.0f, 2.0f, glm::vec4(0.0f, 0.0f , 0.0f , 1.0f));
-        zidian::Render2d::getInstance()->drawPoint(3.0f, 4.0f, glm::vec4(0.0f, 0.0f , 0.0f , 1.0f));
-
-        m_delta_time += delta_time_micro/1000000.0f;
-        m_color_red = 0.5f * std::sin(m_delta_time) + 0.5f;
-        // zidian::Log::i("tick","key space color :%f   time : %f", m_color_red , m_delta_time);
-        zidian::Render2d::getInstance()->setClearColor(glm::vec4(m_color_red, 0.0f, 1.0f - m_color_red ,1.0f));
+        zidian::Render2d::getInstance()->drawPoint(1.0f, 2.0f, glm::vec4(1.0f, 0.0f , 0.0f , 1.0f));
     }
 
     virtual void onDispose(){
@@ -60,6 +54,17 @@ public:
 
     virtual ~GameApp(){
         zidian::Log::i("GameApp", "~GameApp destroy");
+    }
+
+    void testChangeClearColor(float delta_time_micro){
+        zidian::Render2d::getInstance()->clearScreen();
+
+        zidian::Render2d::getInstance()->drawPoint(1.0f, 2.0f, glm::vec4(1.0f, 0.0f , 0.0f , 1.0f));
+        zidian::Render2d::getInstance()->drawPoint(3.0f, 4.0f, glm::vec4(0.0f, 0.0f , 0.0f , 1.0f));
+        m_delta_time += delta_time_micro/1000000.0f;
+        m_color_red = 0.5f * std::sin(m_delta_time) + 0.5f;
+        // zidian::Log::i("tick","key space color :%f   time : %f", m_color_red , m_delta_time);
+        zidian::Render2d::getInstance()->setClearColor(glm::vec4(m_color_red, 0.0f, 1.0f - m_color_red ,1.0f));
     }
 
     void testPlayAudioTick(){
@@ -195,7 +200,7 @@ int main(int argc, char *argv[]){
     param.vsync = true;
     param.window_boardless = false;
     param.render_backend = zidian::RenderBackend::Opengl;
-    param.clear_color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+    param.clear_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
     sandBox.init(param);
     

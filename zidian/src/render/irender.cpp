@@ -9,4 +9,7 @@ namespace zidian{
 
     void IRender::clear(){
     }
+
+    void IRender::dispose(){
+    }
 }

@@ -233,6 +233,8 @@ namespace zidian{
             m_render_task_schedule->clear();
         }
 
+        render->dispose();
+
         glfwMakeContextCurrent(nullptr);
     }
 

@@ -8,6 +8,8 @@ namespace zidian{
         virtual int init() = 0;
         virtual int initEvironment() = 0;
 
+        virtual void dispose();
+
         virtual ~IRender(){};           
 
         //------draw methods----

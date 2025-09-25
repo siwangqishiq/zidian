@@ -52,7 +52,7 @@ namespace zidian{
     }
 
     void Render2d::dispose(){
-
+        
     }
 
     Render2d::~Render2d(){

@@ -42,7 +42,7 @@ namespace zidian{
         std::vector<CmdQueueType>& getCommandBuffer();
 
         void submitCommandBuffer();
-
+        
         void addCmd(CmdQueueType cmd);
 
         //清理屏幕
