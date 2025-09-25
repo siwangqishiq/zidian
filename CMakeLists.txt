@@ -62,7 +62,8 @@ if (MSVC)
     ignore_warning_msvc()
 else()
     set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
-    set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-mwindows")
+    # window窗口程序 打开这个
+    # set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-mwindows")
 endif()
 
 # -------------------------
