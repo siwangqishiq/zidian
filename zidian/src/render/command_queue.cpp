@@ -2,10 +2,16 @@
 #include "utils/log.h"
 
 namespace zidian{
-    CommandQueue::CommandQueue(){
+    CommandQueue::CommandQueue(IRender *render){
+        m_render = render;
+
         m_front_index.store(0);
         m_back_index.store(1);
         m_ready.store(false);
+
+        for(int i = 0 ; i < QUEUE_COUNT; i++){
+            m_command_pools[i] = std::make_shared<CommandPool>(m_render);
+        }//end for i
     }
 
     CommandQueue::~CommandQueue(){
@@ -17,6 +23,10 @@ namespace zidian{
         }
         
         return m_buffers[m_back_index.load()];
+    }
+
+    std::shared_ptr<CommandPool>& CommandQueue::getCurrentCommandPool(){
+        return m_command_pools[m_back_index.load()];
     }
 
     std::vector<CmdQueueType>& CommandQueue::getRenderBuffer(){

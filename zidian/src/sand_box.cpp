@@ -136,6 +136,7 @@ namespace zidian{
             }
         });
 
+        glfwSetWindowPos(m_window, 32, 64);
         glfwSetWindowUserPointer(m_window, static_cast<void *>(this));
         m_render_thread = std::thread([this](){
            renderThreadFunc();
@@ -168,6 +169,7 @@ namespace zidian{
 
         while(!glfwWindowShouldClose(m_window)) {
             Render2d::getInstance()->getCommandBuffer().clear();
+            Render2d::getInstance()->onStartRenderFrame();
 
             //handle input
             glfwPollEvents();
@@ -217,6 +219,8 @@ namespace zidian{
 
         glfwSwapInterval(Config.vsync?1:0);//启动垂直同步
         while(!this->is_exit){
+            auto start_time = CurrentTimeMillis();
+
             Render2d::getInstance()->executeRenderCommands();
 
             if(m_render_task_schedule != nullptr){
@@ -235,6 +239,8 @@ namespace zidian{
                 fps_counter++;
             }
 
+            auto end_time = CurrentTimeMillis();
+            // Log::e("render_thread", "render one frame costtime :%lld", end_time - start_time);
             glfwSwapBuffers(m_window);
         }//end while
             

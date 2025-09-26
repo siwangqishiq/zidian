@@ -8,9 +8,13 @@
 #include "glm/glm.hpp"
 #include "render/command_queue.h"
 #include <mutex>
+#include "render/paint.h"
+
 
 namespace zidian{
     class IRender;
+    class CommandPool;
+    class CommandQueue;
 
     class Render2d{
     public:
@@ -41,11 +45,16 @@ namespace zidian{
 
         void dispose();
 
+
         std::shared_ptr<IRender> getRender(){
             return m_render;
         }
 
+        void onStartRenderFrame();
+
         std::vector<CmdQueueType>& getCommandBuffer();
+        
+        void onAfterSubmitCommandBuffer();
 
         void submitCommandBuffer();
         
@@ -56,11 +65,13 @@ namespace zidian{
 
         void setClearColor(ColorType color);
 
-        void drawPoint(float x, float y, glm::vec4 color);
+        void drawPoint(float x, float y, glm::vec4 color, Paint paint);
     private:
         static std::mutex m_mutex;
         static std::unique_ptr<Render2d> m_instance;
+
         std::shared_ptr<IRender> m_render = nullptr;
+
         std::unique_ptr<CommandQueue> m_command_queue;
     };
 }

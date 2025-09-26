@@ -2,6 +2,7 @@
 
 #include "glm/glm.hpp"
 #include "config.h"
+#include "render/paint.h"
 
 namespace zidian{
     class IRender{
@@ -16,7 +17,7 @@ namespace zidian{
         virtual ~IRender(){};           
 
         //------draw methods----
-        virtual void drawPoint(float &x, float &y , glm::vec4 &color);
+        virtual void drawPoint(float &x, float &y , glm::vec4 &color, Paint &paint);
 
         virtual void setClearColor(glm::vec4 clear_color);
 

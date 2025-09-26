@@ -3,7 +3,7 @@
 #include <string>
 #include <cmath>
 
-std::string audio_path = "";
+extern std::string audio_path;
 
 class TestZidianRender : public zidian::IApp{
 public:
@@ -24,17 +24,54 @@ public:
     }
 
     virtual void onTick(float delta_time_micro){
+        // zidian::Render2d::getInstance()->clearScreen();
+        auto start_time = zidian::CurrentTimeMillis();
+
+        // test_case1();
+        testCase2();
+
+        auto end_time = zidian::CurrentTimeMillis();
+        // zidian::Log::e("log", "logic delta time = %lld", end_time - start_time);
+    }
+
+    void testCase2(){
+        zidian::Render2d::getInstance()->setClearColor(zidian::Colors::BLUE);
+
         zidian::Render2d::getInstance()->clearScreen();
 
         float view_width = zidian::Config.view_width;
         float view_height = zidian::Config.view_height;
-        
-        zidian::Render2d::getInstance()->drawPoint(0.0f, 0.0f, glm::vec4(1.0f, 0.0f , 0.0f , 1.0f));
-        zidian::Render2d::getInstance()->drawPoint(view_width, 0.0f, glm::vec4(0.0f, 1.0f , 0.0f , 1.0f));
-        zidian::Render2d::getInstance()->drawPoint(0.0f, view_height, glm::vec4(0.0f, 0.0f , 1.0f , 1.0f));
-        zidian::Render2d::getInstance()->drawPoint(view_width, view_height, glm::vec4(1.0f, 1.0f , 0.0f , 1.0f));
 
-        zidian::Render2d::getInstance()->drawPoint(view_width /2.0f, view_height/2.0f, glm::vec4(1.0f, 0.0f , 1.0f , 1.0f));
+        zidian::Paint paint;
+        for(int i = 0; i < 10;i++){
+            for(int j = 0;j< 10; j++){
+                zidian::Render2d::getInstance()->drawPoint(
+                    static_cast<float>(j), 
+                    static_cast<float>(i), 
+                    glm::vec4(0.0f, 1.0f , 0.0f , 1.0f),paint);
+            }
+        }
+    }
+
+    void test_case1(){
+        float view_width = zidian::Config.view_width;
+        float view_height = zidian::Config.view_height;
+
+        zidian::Paint paint;
+
+        zidian::Render2d::getInstance()->drawPoint(0.0f, 0.0f, 
+            glm::vec4(1.0f, 0.0f , 0.0f , 1.0f),paint);
+        zidian::Render2d::getInstance()->drawPoint(view_width, 
+            0.0f, glm::vec4(0.0f, 1.0f , 0.0f , 1.0f) , paint);
+        zidian::Render2d::getInstance()->drawPoint(0.0f, view_height, 
+            glm::vec4(0.0f, 0.0f , 1.0f , 1.0f), paint);
+
+        zidian::Render2d::getInstance()->drawPoint(view_width, view_height, 
+            glm::vec4(1.0f, 1.0f , 0.0f , 1.0f), paint);
+
+        paint.point_size = 100.0f;
+        zidian::Render2d::getInstance()->drawPoint(view_width /2.0f, view_height/2.0f, 
+            glm::vec4(1.0f, 0.0f , 1.0f , 1.0f), paint);
     }
 
     virtual void onDispose(){
@@ -72,9 +109,11 @@ int main(int argc, char *argv[]){
     param.name = "test_zidian_render";
     param.full_screen = false;
     param.vsync = true;
+    param.view_width = 1080;
+    param.view_height = 800;
     param.window_boardless = false;
     param.render_backend = zidian::RenderBackend::Opengl;
-    param.clear_color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    param.clear_color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
 
     sandBox.init(param);
     

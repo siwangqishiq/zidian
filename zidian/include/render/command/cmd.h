@@ -1,13 +1,17 @@
 #pragma once
 
 #include <memory>
+#include "render/paint.h"
 
 namespace zidian{
     class IRender;
     class Cmd{
     public:
-        Cmd(IRender *render):m_render(render){}
+        Paint m_paint;
+        int m_type = 0;
         
+        Cmd(int type, IRender *render):m_render(render),m_type(type){}
+        Cmd(IRender *render):m_render(render),m_type(0){}
         virtual ~Cmd();
         virtual void execute();
     protected:

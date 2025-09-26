@@ -10,6 +10,7 @@
 #include "utils/log.h"
 #include "utils/time.h"
 #include "utils/json.h"
+#include "utils/color.h"
 
 #include "widget/app.h"
 #include "widget/task_schedule.h"

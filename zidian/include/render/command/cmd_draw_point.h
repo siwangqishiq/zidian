@@ -2,6 +2,7 @@
 
 #include "render/command/cmd.h"
 #include "glm/glm.hpp"
+#include "render/paint.h"
 
 namespace zidian{
     class IRender;

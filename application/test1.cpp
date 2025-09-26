@@ -41,13 +41,17 @@ public:
 
         float view_width = zidian::Config.view_width;
         float view_height = zidian::Config.view_height;
+
+        zidian::Paint paint;
+        paint.point_size = 10.0f;
         
-        zidian::Render2d::getInstance()->drawPoint(0.0f, 0.0f, glm::vec4(1.0f, 0.0f , 0.0f , 1.0f));
-        zidian::Render2d::getInstance()->drawPoint(view_width, 0.0f, glm::vec4(0.0f, 1.0f , 0.0f , 1.0f));
-        zidian::Render2d::getInstance()->drawPoint(0.0f, view_height, glm::vec4(0.0f, 0.0f , 1.0f , 1.0f));
-        zidian::Render2d::getInstance()->drawPoint(view_width, view_height, glm::vec4(1.0f, 1.0f , 0.0f , 1.0f));
+        zidian::Render2d::getInstance()->drawPoint(0.0f, 0.0f, glm::vec4(1.0f, 0.0f , 0.0f , 1.0f), paint);
+        zidian::Render2d::getInstance()->drawPoint(view_width, 0.0f, glm::vec4(0.0f, 1.0f , 0.0f , 1.0f) , paint);
+        zidian::Render2d::getInstance()->drawPoint(0.0f, view_height, glm::vec4(0.0f, 0.0f , 1.0f , 1.0f) , paint);
+        zidian::Render2d::getInstance()->drawPoint(view_width, view_height, glm::vec4(1.0f, 1.0f , 0.0f , 1.0f) , paint);
         
-        zidian::Render2d::getInstance()->drawPoint(view_width /2.0f, view_height/2.0f, glm::vec4(1.0f, 0.0f , 1.0f , 1.0f));
+        zidian::Render2d::getInstance()->drawPoint(view_width /2.0f, view_height/2.0f, 
+            glm::vec4(1.0f, 0.0f , 1.0f , 1.0f), paint);
     }
 
     virtual void onDispose(){
@@ -68,8 +72,13 @@ public:
     void testChangeClearColor(float delta_time_micro){
         zidian::Render2d::getInstance()->clearScreen();
 
-        zidian::Render2d::getInstance()->drawPoint(1.0f, 2.0f, glm::vec4(1.0f, 0.0f , 0.0f , 1.0f));
-        zidian::Render2d::getInstance()->drawPoint(3.0f, 4.0f, glm::vec4(0.0f, 0.0f , 0.0f , 1.0f));
+        zidian::Paint paint;
+        paint.point_size = 10.0f;
+        zidian::Render2d::getInstance()->drawPoint(1.0f, 2.0f, 
+            glm::vec4(1.0f, 0.0f , 0.0f , 1.0f), paint);
+
+        zidian::Render2d::getInstance()->drawPoint(3.0f, 4.0f, 
+            glm::vec4(0.0f, 0.0f , 0.0f , 1.0f) , paint);
         m_delta_time += delta_time_micro/1000000.0f;
         m_color_red = 0.5f * std::sin(m_delta_time) + 0.5f;
         // zidian::Log::i("tick","key space color :%f   time : %f", m_color_red , m_delta_time);

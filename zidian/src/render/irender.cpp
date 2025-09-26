@@ -4,7 +4,7 @@ namespace zidian{
     void IRender::onSizeChanged(int view_width, int view_height){
     }
 
-    void IRender::drawPoint(float &x, float &y , glm::vec4 &color){
+    void IRender::drawPoint(float &x, float &y , glm::vec4 &color, Paint &paint){
     }
 
     void IRender::setClearColor(glm::vec4 clear_color){

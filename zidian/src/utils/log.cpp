@@ -43,33 +43,33 @@ namespace zidian{
             return;
         }
 
-        printf(LIGHT_RED"%s[%s]:%s\n" NONE ,currentShowTime().c_str(), tag.c_str() , msg.c_str());
+        printf(COLOR_LIGHT_RED"%s[%s]:%s\n" COLOR_NONE ,currentShowTime().c_str(), tag.c_str() , msg.c_str());
     }
 
     void Log::w(const std::string &tag , std::string msg){
         if(UNITTEST){
             return;
         }
-        printf(YELLOW"%s[%s]:%s\n" NONE ,currentShowTime().c_str(), tag.c_str() , msg.c_str());
+        printf(COLOR_YELLOW"%s[%s]:%s\n" COLOR_NONE ,currentShowTime().c_str(), tag.c_str() , msg.c_str());
     }
 
     void Log::i(const std::string &tag , std::string msg){
         if(UNITTEST){
             return;
         }
-        printf(WHITE"%s[%s]:%s\n" NONE ,currentShowTime().c_str(), tag.c_str() , msg.c_str());
+        printf(COLOR_WHITE"%s[%s]:%s\n" COLOR_NONE ,currentShowTime().c_str(), tag.c_str() , msg.c_str());
     }
 
     void Log::green_log(const std::string &tag , std::string msg){
-        printf(GREEN"%s[%s]:%s\n" NONE ,currentShowTime().c_str(), tag.c_str() , msg.c_str());
+        printf(COLOR_GREEN"%s[%s]:%s\n" COLOR_NONE ,currentShowTime().c_str(), tag.c_str() , msg.c_str());
     }
 
     void Log::blue_log(const std::string &tag , std::string msg){
-        printf(BLUE"%s[%s]:%s\n" NONE ,currentShowTime().c_str(), tag.c_str() , msg.c_str());
+        printf(COLOR_BLUE"%s[%s]:%s\n" COLOR_NONE ,currentShowTime().c_str(), tag.c_str() , msg.c_str());
     }
 
     void Log::purple_log(const std::string &tag , std::string msg){
-        printf(PURPLE"%s[%s]:%s\n" NONE ,currentShowTime().c_str(), tag.c_str() , msg.c_str());
+        printf(COLOR_PURPLE"%s[%s]:%s\n" COLOR_NONE ,currentShowTime().c_str(), tag.c_str() , msg.c_str());
     }
 #endif
 

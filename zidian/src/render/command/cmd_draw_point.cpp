@@ -10,11 +10,9 @@ namespace zidian{
     }
 
     CmdDrawPoint::~CmdDrawPoint(){
-        // Log::i("cmd", "~CmdDrawPoint");
     }
 
-    void CmdDrawPoint::execute() {  
-        // Log::i("cmd", "CmdDrawPoint execute p : %f %f", m_x, m_y);
-        m_render->drawPoint(m_x,m_y,m_color);
+    void CmdDrawPoint::execute() {
+        m_render->drawPoint(m_x, m_y, m_color, m_paint);
     }
 }

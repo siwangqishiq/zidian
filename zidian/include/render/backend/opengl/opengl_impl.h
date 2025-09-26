@@ -5,10 +5,12 @@
 #include "render/backend/opengl/shader.h"
 #include "render/backend/opengl/shader_constants.h"
 
+
 namespace zidian{
     class OpenglRender : public IRender{
     public:
         static const std::string UNIFORM_NAME_SCRTONDC_MAT;
+        static const std::string UNIFORM_NAME_POINTSIZE;
 
         glm::mat3 m_screen_ndc_matrix;
 
@@ -22,7 +24,7 @@ namespace zidian{
         
         virtual void clear() override;
         virtual void setClearColor(glm::vec4 clear_color) override;
-        virtual void drawPoint(float &x, float &y , glm::vec4 &color) override;
+        virtual void drawPoint(float &x, float &y , glm::vec4 &color, Paint &paint) override;
     private:
         GLuint m_vao;
 

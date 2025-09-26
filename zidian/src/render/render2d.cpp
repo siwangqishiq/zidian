@@ -6,6 +6,8 @@
 #include "render/backend/vulkan/vulkan_impl.h"
 #include "render/backend/opengl/opengl_impl.h"
 
+#include "render/command/types.h"
+#include "render/command/command_pool.h"
 #include "render/command/cmd.h"
 #include "render/command/cmd_clear.h"
 #include "render/command/cmd_draw_point.h"
@@ -29,7 +31,8 @@ namespace zidian{
     Render2d::Render2d() {
         Log::i("render2d", "Render2d constructure");
         instanceRenderBackend();
-        m_command_queue = std::make_unique<CommandQueue>();
+
+        m_command_queue = std::make_unique<CommandQueue>(m_render.get());
     }
 
     int Render2d::getViewWidth(){
@@ -95,6 +98,18 @@ namespace zidian{
 
     void Render2d::submitCommandBuffer(){
         m_command_queue->submitWriteBuffer();
+        onAfterSubmitCommandBuffer();
+    }
+
+    void Render2d::onStartRenderFrame(){
+        std::shared_ptr<CommandPool>& cmd_pool = m_command_queue->getCurrentCommandPool();
+        // cmd_pool->debugPrintInfo();
+        cmd_pool->resetPool();
+        // Log::blue_log("command_pool", "after reset");
+        // cmd_pool->debugPrintInfo();
+    }
+
+    void Render2d::onAfterSubmitCommandBuffer(){
     }
 
     void Render2d::addCmd(CmdQueueType cmd){
@@ -102,17 +117,21 @@ namespace zidian{
     }
 
     void Render2d::clearScreen(){
-        addCmd(std::make_shared<CmdClear>(m_render.get()));
+        auto cmd = m_command_queue->getCurrentCommandPool()->getCommandByType(CMD_TYPE_CLEAR);
+        addCmd(cmd);
     }
 
     void Render2d::setClearColor(ColorType color){
-        auto cmd = std::make_shared<CmdSetClearColor>(m_render.get());
+        auto cmd = std::dynamic_pointer_cast<CmdSetClearColor>(
+            m_command_queue->getCurrentCommandPool()->getCommandByType(CMD_TYPE_SET_CLEAR_COLOR));
         cmd->putParams(color);
         addCmd(cmd);
     }
 
-    void Render2d::drawPoint(float x, float y, glm::vec4 color){
-        auto cmd = std::make_shared<CmdDrawPoint>(m_render.get());
+    void Render2d::drawPoint(float x, float y, glm::vec4 color, Paint paint){
+        auto cmd = std::dynamic_pointer_cast<CmdDrawPoint>(
+            m_command_queue->getCurrentCommandPool()->getCommandByType(CMD_TYPE_DRAW_POINT));
+        cmd->m_paint = paint;
         cmd->putParams(x, y, color);
         addCmd(cmd);
     }

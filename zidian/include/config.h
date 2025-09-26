@@ -13,8 +13,8 @@ namespace zidian{
     
     struct AppParams{
         std::string name = "zidian_game";
-        int view_width = 1280;
-        int view_height = 800;
+        int view_width = 1920;
+        int view_height = 1080;
         bool full_screen = false;
         bool vsync = false;
         bool window_boardless = false;

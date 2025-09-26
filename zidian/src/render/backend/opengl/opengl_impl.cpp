@@ -10,13 +10,17 @@
 
 namespace zidian{
     const std::string OpenglRender::UNIFORM_NAME_SCRTONDC_MAT = "uScreenToNdcMat";
+    const std::string OpenglRender::UNIFORM_NAME_POINTSIZE = "uPointSize";
 
     int OpenglRender::init() {
         Log::w("render", "init OpengGL render");
+
+#ifndef ANDROID
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
         
         return 0;
     }
@@ -83,7 +87,7 @@ namespace zidian{
         Log::i("opengl_render", "draw_point_shader programID = %u", draw_point_shader.m_programId);
     }
 
-    void OpenglRender::drawPoint(float &x, float &y , glm::vec4 &color){
+    void OpenglRender::drawPoint(float &x, float &y , glm::vec4 &color ,Paint &paint){
         auto draw_point_shader = ShaderManager::getInstance()->getShaderByName(ShaderMetas::DRAW_POINT.name);
         if(draw_point_shader.m_programId == 0){
             return;
@@ -92,6 +96,7 @@ namespace zidian{
         // Log::i("opengl_render", "draw_point_shader programID = %u", draw_point_shader.m_programId);
         draw_point_shader.useShader();
         draw_point_shader.setUniformMat3(UNIFORM_NAME_SCRTONDC_MAT, m_screen_ndc_matrix);
+        draw_point_shader.setUniformFloat(UNIFORM_NAME_POINTSIZE, paint.point_size);
 
         //update data
         float pointPos[2 + 4] = { x, y , color[0], color[1], color[2], color[3]};
