@@ -3,6 +3,7 @@
 /output/**
 /build_linux/**
 /build_mac/**
+/.VSCodeCounter
 /.vscode
 .externalNativeBuild
 .cxx
