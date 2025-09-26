@@ -35,6 +35,12 @@ namespace zidian{
         virtual std::string readAssetFileAsString(std::string path);
 
         virtual std::unique_ptr<uint8_t[]> readAssetFileAsBinary(std::string path, long &length);
+
+        virtual uint8_t* loadImageFileFromPath(std::string path, int &width, int &height,
+                            int &channel, bool need_flip = false);
+
+        virtual uint8_t* readAssetImageFile(std::string path, int &width, int &height,
+                            int &channel, bool need_flip = false);
     private:
         static std::unique_ptr<AssetManager> m_instance;
     };

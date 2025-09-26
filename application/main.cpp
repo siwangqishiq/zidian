@@ -21,6 +21,8 @@ public:
     virtual void onInit(){
         zidian::Log::i("GameApp","onInit");
         printFpsLog();
+        // testReadImageFile();
+        testReadAssetImageFile();
     }
 
     virtual void onTick(float delta_time_micro){
@@ -32,6 +34,34 @@ public:
 
         auto end_time = zidian::CurrentTimeMillis();
         // zidian::Log::e("log", "logic delta time = %lld", end_time - start_time);
+    }
+
+    void testReadAssetImageFile(){
+        int width = 0;
+        int height = 0;
+        int channel = 0;
+
+        uint8_t *data = 
+            zidian::AssetManager::getInstance()->readAssetImageFile("images/nvyou.jpg",
+            width, height, channel);
+
+        if(data != nullptr){
+            delete[] data;
+        }
+    }
+
+    void testReadImageFile(){
+        int width = 0;
+        int height = 0;
+        int channel = 0;
+
+        uint8_t *data = 
+            zidian::AssetManager::getInstance()->loadImageFileFromPath("d:/test.jpg",
+            width, height, channel);
+
+        if(data != nullptr){
+            delete[] data;
+        }
     }
 
     void testCase2(){
