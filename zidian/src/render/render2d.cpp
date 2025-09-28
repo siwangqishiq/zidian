@@ -87,9 +87,11 @@ namespace zidian{
 
     void Render2d::executeRenderCommands(){
         std::vector<CmdQueueType>& cmds = m_command_queue->getRenderBuffer();
+        // Log::blue_log("render_thread" , "executeRenderCommands size. %d", cmds.size());
         for(CmdQueueType& cmd : cmds){
             cmd->execute();
         }
+        cmds.clear();
         // Log::blue_log("render_thread" , "executeRenderCommands end. %d", std::this_thread::get_id());
     }
 
@@ -115,6 +117,7 @@ namespace zidian{
 
     void Render2d::addCmd(CmdQueueType cmd){
         m_command_queue->getWriteBuffer().emplace_back(cmd);
+        // Log::e("render2d", "Render2d after cmd size = %d", m_command_queue->getWriteBuffer().size());
     }
 
     void Render2d::clearScreen(){

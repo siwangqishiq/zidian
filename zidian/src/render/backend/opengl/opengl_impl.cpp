@@ -98,6 +98,7 @@ namespace zidian{
             ->getCurrentCommandPool()->getCommandByType(CMD_TYPE_SET_CLEAR_COLOR);
         auto setColorCmd = std::dynamic_pointer_cast<CmdSetClearColor>(cmd);
         setColorCmd->putParams(clear_color);
+        // Log::e("render2d", "add clear color cmd");
         Render2d::getInstance()->addCmd(cmd);
     }
 

@@ -170,7 +170,7 @@ namespace zidian{
         while(!glfwWindowShouldClose(m_window)) {
             Render2d::getInstance()->getCommandBuffer().clear();
             Render2d::getInstance()->onStartRenderFrame();
-
+            
             //handle input
             glfwPollEvents();
             if(glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
@@ -211,7 +211,7 @@ namespace zidian{
         auto render = Render2d::getInstance()->getRender();
 
         render->initEvironment();
-        render->setClearColor(Config.clear_color);
+        // render->setClearColor(Config.clear_color);
 
         double elapsed_time = 0.0f;
         double last_time = CurrentTimeMircoDoubleFloat();

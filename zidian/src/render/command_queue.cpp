@@ -33,7 +33,7 @@ namespace zidian{
         while(!m_ready.load()){
             std::this_thread::yield();
         }
-
+        
         m_ready.store(false);
         return m_buffers[m_front_index.load()];
     }

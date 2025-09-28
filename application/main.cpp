@@ -30,10 +30,10 @@ public:
         printFpsLog();
         // testReadImageFile();
         testReadAssetImageFile();
+        zidian::Render2d::getInstance()->setClearColor(zidian::Colors::PURPLE);
     }
 
     virtual void onTick(float delta_time_micro){
-        // zidian::Render2d::getInstance()->clearScreen();
         auto start_time = zidian::CurrentTimeMillis();
 
         // test_case1();
@@ -47,7 +47,6 @@ public:
 
     void testCase4(){
         zidian::Render2d::getInstance()->clearScreen();
-        zidian::Render2d::getInstance()->setClearColor(zidian::Colors::BLACK);
 
         zidian::Paint paint;
         for(int i = 0; i < 10;i++){
