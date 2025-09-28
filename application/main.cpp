@@ -15,6 +15,13 @@ public:
     float m_color_red = 0.0f;
     float m_delta_time = 0.0f;
 
+
+    int m_img_width = 0;
+    int m_img_height = 0;
+    int m_img_channel = 0;
+
+    glm::vec4 *m_pixels = nullptr;
+
     TestZidianRender(zidian::SandBox *context) : m_context(context){
     }
 
@@ -30,24 +37,52 @@ public:
         auto start_time = zidian::CurrentTimeMillis();
 
         // test_case1();
-        testCase2();
+        // testCase2();
+        testCase3RenderImage();
 
         auto end_time = zidian::CurrentTimeMillis();
         // zidian::Log::e("log", "logic delta time = %lld", end_time - start_time);
     }
 
     void testReadAssetImageFile(){
-        int width = 0;
-        int height = 0;
-        int channel = 0;
-
         uint8_t *data = 
-            zidian::AssetManager::getInstance()->readAssetImageFile("images/nvyou.jpg",
-            width, height, channel);
+            zidian::AssetManager::getInstance()->readAssetImageFile("images/p_128.jpg",
+            m_img_width, m_img_height, m_img_channel);
+
+        const int len = m_img_width * m_img_height;
+        if(len > 0){
+            m_pixels = new glm::vec4[len];
+            for(int i = 0 ; i < len ;i++){
+                if(m_img_channel == 3){
+                    auto color = zidian::CreateColor(
+                            data[i * m_img_channel + 0],
+                            data[i * m_img_channel + 1],
+                            data[i * m_img_channel + 2],
+                            255
+                        );
+                    m_pixels[i] = color;
+                }else if(m_img_channel == 4){
+                    auto color = zidian::CreateColor(
+                            data[i * m_img_channel + 0],
+                            data[i * m_img_channel + 1],
+                            data[i * m_img_channel + 2],
+                            data[i * m_img_channel + 4]
+                        );
+                    m_pixels[i] = color;
+                }
+            }
+        }
+
 
         if(data != nullptr){
             delete[] data;
         }
+
+        // for(int i = 0;i < m_img_width * m_img_height ;i++){
+        //     zidian::Log::green_log("pixels", "color<%f, %f, %f ,%f>", 
+        //         m_pixels[i][0],m_pixels[i][1],m_pixels[i][2],m_pixels[i][3]);
+        // }
+        zidian::Log::green_log("pixels" ,"total pixels count :%d", m_img_width * m_img_height);
     }
 
     void testReadImageFile(){
@@ -64,9 +99,21 @@ public:
         }
     }
 
+    void testCase3RenderImage(){
+        zidian::Render2d::getInstance()->clearScreen();
+        zidian::Paint paint;
+        for(int i = 0; i < m_img_height;i++){
+            for(int j = 0;j< m_img_width; j++){
+                zidian::Render2d::getInstance()->drawPoint(
+                    static_cast<float>(j), 
+                    static_cast<float>(i), 
+                    m_pixels[m_img_width * i + j],paint);
+            }
+        }
+    }
+
     void testCase2(){
         zidian::Render2d::getInstance()->setClearColor(zidian::Colors::BLUE);
-
         zidian::Render2d::getInstance()->clearScreen();
 
         float view_width = zidian::Config.view_width;
@@ -117,6 +164,10 @@ public:
 
     virtual ~TestZidianRender(){
         zidian::Log::i("GameApp", "~GameApp destroy");
+        if(m_pixels != nullptr){
+            delete[] m_pixels;
+            m_pixels = nullptr;
+        }
     }
 
     void printFpsLog(){
@@ -139,8 +190,8 @@ int main(int argc, char *argv[]){
     param.name = "test_zidian_render";
     param.full_screen = false;
     param.vsync = true;
-    param.view_width = 1080;
-    param.view_height = 800;
+    param.view_width = 1280;
+    param.view_height = 720;
     param.window_boardless = false;
     param.render_backend = zidian::RenderBackend::Opengl;
     param.clear_color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
