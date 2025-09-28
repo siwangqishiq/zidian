@@ -74,6 +74,9 @@ namespace zidian{
             case CMD_TYPE_SET_CLEAR_COLOR:
                 result = std::make_shared<CmdSetClearColor>();
                 break;
+            case CMD_TYPE_BATCH_DRAW_POINTS_BEGIN:
+                
+                break;
         }//end switch
         return result;
     }

@@ -4,10 +4,6 @@ namespace zidian{
     void IRender::onSizeChanged(int view_width, int view_height){
     }
 
-    std::shared_ptr<Cmd> createCommandInstance(int cmd_type){
-        return nullptr;
-    }
-
     void IRender::drawPoint(float &x, float &y , glm::vec4 &color, Paint &paint){
     }
 
@@ -18,6 +14,10 @@ namespace zidian{
     }
 
     void IRender::dispose(){
+    }
+
+    std::shared_ptr<IBatchDrawPoints> IRender::batchDrawPoints(){
+        return nullptr;
     }
 
     std::shared_ptr<Cmd> IRender::createCommandInstance(int cmd_type){

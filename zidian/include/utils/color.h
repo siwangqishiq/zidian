@@ -11,6 +11,8 @@ namespace zidian{
     */
     class Colors{
     public:
+        static ColorType BLACK;
+        static ColorType WHITE;
         static ColorType RED;
         static ColorType GREEN;
         static ColorType BLUE;

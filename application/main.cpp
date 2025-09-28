@@ -47,7 +47,7 @@ public:
 
     void testCase4(){
         zidian::Render2d::getInstance()->clearScreen();
-        zidian::Render2d::getInstance()->setClearColor(zidian::Colors::SKY_BLUE);
+        zidian::Render2d::getInstance()->setClearColor(zidian::Colors::BLACK);
 
         zidian::Paint paint;
         for(int i = 0; i < 10;i++){

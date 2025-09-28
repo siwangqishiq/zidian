@@ -26,7 +26,7 @@ namespace zidian{
 
         void debugPrintInfo();
     private:
-        int m_limit_size = 1024 * 1024;
+        int m_limit_size = 1024;
         std::unordered_map<int, CmdDeque> m_pool;
 
         IRender *m_render;

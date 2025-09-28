@@ -3,6 +3,7 @@
 #include "glm/glm.hpp"
 #include "config.h"
 #include "render/paint.h"
+#include "render/batch/ibatch_draw_points.h"
 
 namespace zidian{
     class IRender{
@@ -16,7 +17,10 @@ namespace zidian{
 
         virtual ~IRender(){};
 
-        virtual std::shared_ptr<Cmd> createCommandInstance(int cmd_type);       
+        virtual std::shared_ptr<Cmd> createCommandInstance(int cmd_type);
+
+        //----- batch ------
+        virtual std::shared_ptr<IBatchDrawPoints> batchDrawPoints();
 
         //------draw methods----
         virtual void drawPoint(float &x, float &y , glm::vec4 &color, Paint &paint);

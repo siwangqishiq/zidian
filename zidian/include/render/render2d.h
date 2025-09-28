@@ -9,7 +9,7 @@
 #include "render/command_queue.h"
 #include <mutex>
 #include "render/paint.h"
-
+#include "render/batch/ibatch_draw_points.h"
 
 namespace zidian{
     class IRender;
@@ -65,6 +65,8 @@ namespace zidian{
         void setClearColor(ColorType color);
 
         void drawPoint(float x, float y, glm::vec4 color, Paint paint);
+
+        std::shared_ptr<IBatchDrawPoints> batchDrawPoints();
 
         std::unique_ptr<CommandQueue>& getCommandQueue();
 

@@ -130,4 +130,8 @@ namespace zidian{
     void Render2d::drawPoint(float x, float y, glm::vec4 color, Paint paint){
         m_render->drawPoint(x, y, color, paint);
     }
+
+    std::shared_ptr<IBatchDrawPoints> Render2d::batchDrawPoints(){
+        return m_render->batchDrawPoints();
+    }
 }

@@ -12,25 +12,20 @@ namespace zidian{
         m_paint = paint;
     }
 
-    CmdDrawPoint::~CmdDrawPoint(){
-        glDeleteBuffers(1, &m_draw_point_buffer);
-        glDeleteVertexArrays(1, &m_draw_point_vao);
-    }
-
     void CmdDrawPoint::prepareDrawPoint(){
         auto draw_point_shader = ShaderManager::getInstance()->loadAssetShader(ShaderMetas::DRAW_POINT);
-        Log::i("opengl_render", "draw_point_shader programID = %u", draw_point_shader.m_programId);
+        // Log::i("opengl_render", "draw_point_shader programID = %u", draw_point_shader.m_programId);
 
         GLuint vaos[1];
         glGenVertexArrays(1,vaos);
-        m_draw_point_vao = vaos[0];
+        m_vao = vaos[0];
 
         GLuint vbo[1];
         glGenBuffers(1, vbo);
-        m_draw_point_buffer = vbo[0];
+        m_vbo = vbo[0];
         
-        glBindVertexArray(m_draw_point_vao);
-        glBindBuffer(GL_ARRAY_BUFFER, m_draw_point_buffer);
+        glBindVertexArray(m_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * (2 + 4), nullptr, GL_DYNAMIC_DRAW);
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, (2 + 4) * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
@@ -38,12 +33,11 @@ namespace zidian{
         glEnableVertexAttribArray(1);
 
         glBindVertexArray(0);
-
-        Log::e("test", "m_draw_point_buffer = %d", m_draw_point_buffer);
+        // Log::e("test", "m_draw_point_buffer = %d", m_vbo);
     }
 
     void CmdDrawPoint::execute() {
-        if(m_draw_point_buffer == 0){
+        if(m_vbo == 0){
             prepareDrawPoint();
         }
 
@@ -59,11 +53,15 @@ namespace zidian{
 
         //update data
         float pointPos[2 + 4] = { m_x, m_y , m_color[0], m_color[1], m_color[2], m_color[3]};
-        glBindBuffer(GL_ARRAY_BUFFER, m_draw_point_buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(pointPos), pointPos);
 
-        glBindVertexArray(m_draw_point_vao);
+        glBindVertexArray(m_vao);
         glDrawArrays(GL_POINTS, 0, 1);
         glBindVertexArray(0);
+    }
+
+    CmdDrawPoint::~CmdDrawPoint(){
+        CmdBaseOpenGL::~CmdBaseOpenGL();
     }
 }
