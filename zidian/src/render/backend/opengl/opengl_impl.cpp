@@ -6,12 +6,14 @@
 #include "GLFW/glfw3.h"
 #endif
 
+#include "render/command/types.h"
+#include "render/backend/opengl/shader.h"
+#include "render/backend/opengl/command/cmd_clear.h"
+#include "render/backend/opengl/command/cmd_draw_point.h"
+#include "render/backend/opengl/command/cmd_set_clear_color.h"
 #include "config.h"
 
 namespace zidian{
-    const std::string OpenglRender::UNIFORM_NAME_SCRTONDC_MAT = "uScreenToNdcMat";
-    const std::string OpenglRender::UNIFORM_NAME_POINTSIZE = "uPointSize";
-
     int OpenglRender::init() {
         Log::w("render", "init OpengGL render");
 
@@ -38,89 +40,67 @@ namespace zidian{
     }
 
     void OpenglRender::initOpenglEnv(){
-        GLuint vaos[1];
-        glGenVertexArrays(1,vaos);
-        m_vao = vaos[0];
-
         glEnable(GL_PROGRAM_POINT_SIZE);
         
         onSizeChanged(Config.view_width, Config.view_height);
-        prepareDrawPoint();
     }
 
     void OpenglRender::onSizeChanged(int view_width, int view_height){
-        m_screen_ndc_matrix[0][0] = 2.0f / view_width;
-        m_screen_ndc_matrix[0][1] = 0.0f;
-        m_screen_ndc_matrix[0][2] = 0.0f;
+        glm::mat3& matrix = Render2d::getInstance()->m_screen_ndc_matrix;
+        matrix[0][0] = 2.0f / view_width;
+        matrix[0][1] = 0.0f;
+        matrix[0][2] = 0.0f;
 
-        m_screen_ndc_matrix[1][0] = 0.0f;
-        m_screen_ndc_matrix[1][1] = -2.0f / view_height;
-        m_screen_ndc_matrix[1][2] = 0.0f;
+        matrix[1][0] = 0.0f;
+        matrix[1][1] = -2.0f / view_height;
+        matrix[1][2] = 0.0f;
 
-        m_screen_ndc_matrix[2][0] = -1.0f;
-        m_screen_ndc_matrix[2][1] =  1.0f;
-        m_screen_ndc_matrix[2][2] =  1.0f;
+        matrix[2][0] = -1.0f;
+        matrix[2][1] =  1.0f;
+        matrix[2][2] =  1.0f;
 
         glViewport(0, 0, view_width, view_height);
     }
 
-    void OpenglRender::prepareDrawPoint(){
-        GLuint vaos[1];
-        glGenVertexArrays(1,vaos);
-        m_draw_point_vao = vaos[0];
-
-        GLuint vbo[1];
-        glGenBuffers(1, vbo);
-        m_draw_point_buffer = vbo[0];
-        
-        glBindVertexArray(m_draw_point_vao);
-        glBindBuffer(GL_ARRAY_BUFFER, m_draw_point_buffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * (2 + 4), nullptr, GL_DYNAMIC_DRAW);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, (2 + 4) * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, (2 + 4) * sizeof(float), (void*)(2 * sizeof(float)));
-        glEnableVertexAttribArray(1);
-
-        glBindVertexArray(0);
-
-        auto draw_point_shader = ShaderManager::getInstance()->loadAssetShader(ShaderMetas::DRAW_POINT);
-        Log::i("opengl_render", "draw_point_shader programID = %u", draw_point_shader.m_programId);
+    std::shared_ptr<Cmd> OpenglRender::createCommandInstance(int cmd_type) {
+        std::shared_ptr<Cmd> result = nullptr;
+        switch(cmd_type){
+            case CMD_TYPE_DRAW_POINT:
+                result = std::make_shared<CmdDrawPoint>();
+                break;
+            case CMD_TYPE_CLEAR:
+                result = std::make_shared<CmdClear>();
+                break;
+            case CMD_TYPE_SET_CLEAR_COLOR:
+                result = std::make_shared<CmdSetClearColor>();
+                break;
+        }//end switch
+        return result;
     }
 
     void OpenglRender::drawPoint(float &x, float &y , glm::vec4 &color ,Paint &paint){
-        auto draw_point_shader = ShaderManager::getInstance()->getShaderByName(ShaderMetas::DRAW_POINT.name);
-        if(draw_point_shader.m_programId == 0){
-            return;
-        }
-
-        // Log::i("opengl_render", "draw_point_shader programID = %u", draw_point_shader.m_programId);
-        draw_point_shader.useShader();
-        draw_point_shader.setUniformMat3(UNIFORM_NAME_SCRTONDC_MAT, m_screen_ndc_matrix);
-        draw_point_shader.setUniformFloat(UNIFORM_NAME_POINTSIZE, paint.point_size);
-
-        //update data
-        float pointPos[2 + 4] = { x, y , color[0], color[1], color[2], color[3]};
-        glBindBuffer(GL_ARRAY_BUFFER, m_draw_point_buffer);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(pointPos), pointPos);
-
-        glBindVertexArray(m_draw_point_vao);
-        glDrawArrays(GL_POINTS, 0, 1);
-        glBindVertexArray(0);
+        auto cmd = Render2d::getInstance()->getCommandQueue()
+            ->getCurrentCommandPool()->getCommandByType(CMD_TYPE_DRAW_POINT);
+        auto draw_point_cmd = std::dynamic_pointer_cast<CmdDrawPoint>(cmd);
+        draw_point_cmd->putParams(x, y, color ,paint);
+        Render2d::getInstance()->addCmd(cmd);
     }
 
     void OpenglRender::dispose() {
-        glDeleteBuffers(1, &m_draw_point_buffer);
-        glDeleteVertexArrays(1, &m_draw_point_vao);
-
         ShaderManager::getInstance()->clear();
     }
 
     void OpenglRender::setClearColor(glm::vec4 clear_color){
-        glClearColor(clear_color[0], clear_color[1] ,clear_color[2] ,clear_color[3]);
+        auto cmd = Render2d::getInstance()->getCommandQueue()
+            ->getCurrentCommandPool()->getCommandByType(CMD_TYPE_SET_CLEAR_COLOR);
+        auto setColorCmd = std::dynamic_pointer_cast<CmdSetClearColor>(cmd);
+        setColorCmd->putParams(clear_color);
+        Render2d::getInstance()->addCmd(cmd);
     }
 
     void OpenglRender::clear(){
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        auto cmd = Render2d::getInstance()->getCommandQueue()->getCurrentCommandPool()->getCommandByType(CMD_TYPE_CLEAR);
+        Render2d::getInstance()->addCmd(cmd);
     }
 }
 

@@ -38,10 +38,26 @@ public:
 
         // test_case1();
         // testCase2();
-        testCase3RenderImage();
+        // testCase3RenderImage();
+        testCase4();
 
         auto end_time = zidian::CurrentTimeMillis();
         // zidian::Log::e("log", "logic delta time = %lld", end_time - start_time);
+    }
+
+    void testCase4(){
+        zidian::Render2d::getInstance()->clearScreen();
+        zidian::Render2d::getInstance()->setClearColor(zidian::Colors::SKY_BLUE);
+
+        zidian::Paint paint;
+        for(int i = 0; i < 10;i++){
+            for(int j = 0;j< 10; j++){
+                zidian::Render2d::getInstance()->drawPoint(
+                    static_cast<float>(j), 
+                    static_cast<float>(i), 
+                    m_pixels[m_img_width * i + j],paint);
+            }
+        }   
     }
 
     void testReadAssetImageFile(){
@@ -100,7 +116,9 @@ public:
     }
 
     void testCase3RenderImage(){
-        zidian::Render2d::getInstance()->clearScreen();
+        // zidian::Render2d::getInstance()->clearScreen();
+        // zidian::Render2d::getInstance()->setClearColor(zidian::Colors::SKY_BLUE);
+
         zidian::Paint paint;
         for(int i = 0; i < m_img_height;i++){
             for(int j = 0;j< m_img_width; j++){
@@ -109,7 +127,7 @@ public:
                     static_cast<float>(i), 
                     m_pixels[m_img_width * i + j],paint);
             }
-        }
+        }   
     }
 
     void testCase2(){

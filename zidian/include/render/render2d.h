@@ -45,7 +45,6 @@ namespace zidian{
 
         void dispose();
 
-
         std::shared_ptr<IRender> getRender(){
             return m_render;
         }
@@ -66,6 +65,10 @@ namespace zidian{
         void setClearColor(ColorType color);
 
         void drawPoint(float x, float y, glm::vec4 color, Paint paint);
+
+        std::unique_ptr<CommandQueue>& getCommandQueue();
+
+        glm::mat3 m_screen_ndc_matrix;
     private:
         static std::mutex m_mutex;
         static std::unique_ptr<Render2d> m_instance;

@@ -2,10 +2,6 @@
 
 #include "render/command/command_pool.h"
 #include "render/command/types.h"
-#include "render/command/cmd_draw_point.h"
-#include "render/command/cmd_clear.h"
-#include "render/command/cmd_set_clear_color.h"
-
 
 namespace zidian{
     CommandPool::CommandPool(IRender *render){
@@ -59,19 +55,10 @@ namespace zidian{
     }
 
     std::shared_ptr<Cmd> CommandPool::createPoolInstance(int cmd_type){
-        std::shared_ptr<Cmd> result = nullptr;
-        switch(cmd_type){
-            case CMD_TYPE_DRAW_POINT:
-                result = std::make_shared<CmdDrawPoint>(m_render);
-                break;
-            case CMD_TYPE_CLEAR:
-                result = std::make_shared<CmdClear>(m_render);
-                break;
-            case CMD_TYPE_SET_CLEAR_COLOR:
-                result = std::make_shared<CmdSetClearColor>(m_render);
-                break;
-        }//end switch
-        return result;
+        if(m_render == nullptr){
+            return std::make_shared<Cmd>(cmd_type);
+        }
+        return m_render->createCommandInstance(cmd_type);
     }
 }
 

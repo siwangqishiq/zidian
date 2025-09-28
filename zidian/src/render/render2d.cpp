@@ -9,9 +9,6 @@
 #include "render/command/types.h"
 #include "render/command/command_pool.h"
 #include "render/command/cmd.h"
-#include "render/command/cmd_clear.h"
-#include "render/command/cmd_draw_point.h"
-#include "render/command/cmd_set_clear_color.h"
 
 namespace zidian{
     const std::string Render2d::TAG = "render2d";
@@ -84,6 +81,10 @@ namespace zidian{
         Log::i("render2d", "Render2d destroy");
     }
 
+    std::unique_ptr<CommandQueue>& Render2d::getCommandQueue(){
+        return m_command_queue;
+    }
+
     void Render2d::executeRenderCommands(){
         std::vector<CmdQueueType>& cmds = m_command_queue->getRenderBuffer();
         for(CmdQueueType& cmd : cmds){
@@ -117,22 +118,16 @@ namespace zidian{
     }
 
     void Render2d::clearScreen(){
-        auto cmd = m_command_queue->getCurrentCommandPool()->getCommandByType(CMD_TYPE_CLEAR);
-        addCmd(cmd);
+        // auto cmd = m_command_queue->getCurrentCommandPool()->getCommandByType(CMD_TYPE_CLEAR);
+        // addCmd(cmd);
+        m_render->clear();
     }
 
     void Render2d::setClearColor(ColorType color){
-        auto cmd = std::dynamic_pointer_cast<CmdSetClearColor>(
-            m_command_queue->getCurrentCommandPool()->getCommandByType(CMD_TYPE_SET_CLEAR_COLOR));
-        cmd->putParams(color);
-        addCmd(cmd);
+        m_render->setClearColor(color);
     }
 
     void Render2d::drawPoint(float x, float y, glm::vec4 color, Paint paint){
-        auto cmd = std::dynamic_pointer_cast<CmdDrawPoint>(
-            m_command_queue->getCurrentCommandPool()->getCommandByType(CMD_TYPE_DRAW_POINT));
-        cmd->m_paint = paint;
-        cmd->putParams(x, y, color);
-        addCmd(cmd);
+        m_render->drawPoint(x, y, color, paint);
     }
 }

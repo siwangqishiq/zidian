@@ -13,4 +13,7 @@ namespace zidian{
     ColorType Colors::RED = CreateColor(255,0,0,255);
     ColorType Colors::GREEN = CreateColor(0,255,0,255);
     ColorType Colors::BLUE = CreateColor(0,0,255,255);
+    ColorType Colors::CORAL= CreateColor(255,114,86,255);
+    ColorType Colors::PURPLE = CreateColor(160,32,240,255);
+    ColorType Colors::SKY_BLUE = CreateColor(135,206,235,255);
 }
