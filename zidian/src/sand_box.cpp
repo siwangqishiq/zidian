@@ -153,6 +153,7 @@ namespace zidian{
 
     //主线程
     void SandBox::mainThreadFunc(){
+        m_main_tid = std::this_thread::get_id();
         Render2d::getInstance()->onRenderStart();
         
         m_main_task_schedule = std::make_unique<TaskSchedule>();
@@ -205,14 +206,17 @@ namespace zidian{
     //渲染线程
     void SandBox::renderThreadFunc(){
         Log::w(TAG,"start render thread: %ld", std::this_thread::get_id());
+        m_render_tid = std::this_thread::get_id();
 
         glfwMakeContextCurrent(m_window);
+  
         m_render_task_schedule = std::make_unique<TaskSchedule>();
-        auto render = Render2d::getInstance()->getRender();
 
+        
+        auto render = Render2d::getInstance()->getRender();
+        render->setRenderThreadId(m_render_tid);
         render->initEvironment();
         // render->setClearColor(Config.clear_color);
-
         double elapsed_time = 0.0f;
         double last_time = CurrentTimeMircoDoubleFloat();
         int fps_counter = 0;

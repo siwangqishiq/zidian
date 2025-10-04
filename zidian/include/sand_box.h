@@ -32,6 +32,9 @@ namespace zidian{
     private:
         IApp *m_app = nullptr;
 
+        std::thread::id m_main_tid;
+        std::thread::id m_render_tid;
+
         std::thread m_render_thread;
 
         std::atomic<bool> is_exit = false;

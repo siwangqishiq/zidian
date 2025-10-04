@@ -116,7 +116,12 @@ namespace zidian{
     }
 
     void Render2d::addCmd(CmdQueueType cmd){
-        m_command_queue->getWriteBuffer().emplace_back(cmd);
+        if(!m_render->checkIsRenderThread()){
+            m_command_queue->getWriteBuffer().emplace_back(cmd);
+        }else{
+            Log::e("render2d", "Render2d add cmd run in error thread cmd = %d", cmd->m_type);
+            throw std::runtime_error("Render2d add run in error thread!");
+        }
         // Log::e("render2d", "Render2d after cmd size = %d", m_command_queue->getWriteBuffer().size());
     }
 

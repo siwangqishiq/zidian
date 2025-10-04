@@ -4,12 +4,15 @@
 #include "config.h"
 #include "render/paint.h"
 #include "render/batch/ibatch_draw_points.h"
+#include <thread>
 
 namespace zidian{
     class IRender{
     public:
         virtual int init() = 0;
         virtual int initEvironment() = 0;
+
+        virtual void setRenderThreadId(std::thread::id render_tid);
 
         virtual void dispose();
 
@@ -28,6 +31,10 @@ namespace zidian{
         virtual void setClearColor(glm::vec4 clear_color);
 
         virtual void clear();
+
+        virtual bool checkIsRenderThread();
+    private:
+        std::thread::id m_render_tid;
     };
 }
 
