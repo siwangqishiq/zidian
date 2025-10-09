@@ -67,7 +67,7 @@ namespace zidian{
 
     class ShaderManager{
     public:
-        static std::unique_ptr<ShaderManager> &getInstance();
+        static std::unique_ptr<ShaderManager>& getInstance();
 
         std::string readShaderSrc(std::string shaderPath);
 
@@ -75,7 +75,7 @@ namespace zidian{
         Shader loadAssetShader(ShaderMeta &meta);
         
         Shader loadShader(std::string shaderName , std::string vertexSrc , std::string frgSrc);
-
+        
         Shader getShaderByName(std::string shaderName);
 
         void clear();

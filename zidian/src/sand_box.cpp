@@ -170,7 +170,7 @@ namespace zidian{
 
         while(!glfwWindowShouldClose(m_window)) {
             Render2d::getInstance()->getCommandBuffer();
-            
+
             Render2d::getInstance()->onStartRenderFrame();
             
             //handle input

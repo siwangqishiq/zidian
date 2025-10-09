@@ -222,7 +222,7 @@ int main(int argc, char *argv[]){
     
     TestZidianRender *game = new TestZidianRender(&sandBox);
     sandBox.setApp(game);
-    int ret_code = sandBox.runLoop(argc, argv);
+    const int ret_code = sandBox.runLoop(argc, argv);
     delete game;
     return ret_code;
 }

@@ -16,7 +16,7 @@ namespace zidian{
         //     m_clear_color[1],
         //     m_clear_color[2],
         //     m_clear_color[3]);
-
+        
         glClearColor(m_clear_color[0], 
             m_clear_color[1] ,
             m_clear_color[2] ,
