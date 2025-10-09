@@ -28,7 +28,7 @@ namespace zidian{
     Render2d::Render2d() {
         Log::i("render2d", "Render2d constructure");
         instanceRenderBackend();
-
+        
         m_command_queue = std::make_unique<CommandQueue>(m_render.get());
     }
 
@@ -86,8 +86,10 @@ namespace zidian{
     }
 
     void Render2d::executeRenderCommands(){
+        // m_command_queue->showFrontBackIndex();
         std::vector<CmdQueueType>& cmds = m_command_queue->getRenderBuffer();
-        // Log::blue_log("render_thread" , "executeRenderCommands size. %d", cmds.size());
+        // Log::blue_log("debug" , "executeRenderCommands size = %d", cmds.size());
+
         for(CmdQueueType& cmd : cmds){
             cmd->execute();
         }
@@ -119,9 +121,10 @@ namespace zidian{
         if(!m_render->checkIsRenderThread()){
             m_command_queue->getWriteBuffer().emplace_back(cmd);
         }else{
-            Log::e("render2d", "Render2d add cmd run in error thread cmd = %d", cmd->m_type);
+            Log::e("render2d", "Render2d add cmd run in error thread command type : %d", cmd->m_type);
             throw std::runtime_error("Render2d add run in error thread!");
         }
+
         // Log::e("render2d", "Render2d after cmd size = %d", m_command_queue->getWriteBuffer().size());
     }
 

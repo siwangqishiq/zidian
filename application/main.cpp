@@ -30,22 +30,27 @@ public:
         printFpsLog();
         // testReadImageFile();
         testReadAssetImageFile();
+
+        zidian::Render2d::getInstance()->setClearColor(zidian::Colors::SKY_BLUE);
     }
 
     virtual void onTick(float delta_time_micro){
         auto start_time = zidian::CurrentTimeMillis();
 
+        zidian::Render2d::getInstance()->clearScreen();
+
+        // zidian::Render2d::getInstance()->setClearColor(zidian::Colors::SKY_BLUE);
         // test_case1();
         // testCase2();
         // testCase3RenderImage();
-        testCase4();
+        // testCase4();
 
         auto end_time = zidian::CurrentTimeMillis();
         // zidian::Log::e("log", "logic delta time = %lld", end_time - start_time);
     }
 
     void testCase4(){
-        zidian::Render2d::getInstance()->setClearColor(zidian::Colors::SKY_BLUE);
+        // zidian::Render2d::getInstance()->setClearColor(zidian::Colors::SKY_BLUE);
         zidian::Render2d::getInstance()->clearScreen();
 
         zidian::Paint paint;

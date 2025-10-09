@@ -169,7 +169,8 @@ namespace zidian{
         InputManager::getInstance()->setWindowInstance(m_window);
 
         while(!glfwWindowShouldClose(m_window)) {
-            Render2d::getInstance()->getCommandBuffer().clear();
+            Render2d::getInstance()->getCommandBuffer();
+            
             Render2d::getInstance()->onStartRenderFrame();
             
             //handle input
@@ -212,11 +213,13 @@ namespace zidian{
   
         m_render_task_schedule = std::make_unique<TaskSchedule>();
 
-        
         auto render = Render2d::getInstance()->getRender();
         render->setRenderThreadId(m_render_tid);
         render->initEvironment();
+
+        // error debug in error thread  
         // render->setClearColor(Config.clear_color);
+
         double elapsed_time = 0.0f;
         double last_time = CurrentTimeMircoDoubleFloat();
         int fps_counter = 0;
@@ -224,7 +227,7 @@ namespace zidian{
         glfwSwapInterval(Config.vsync?1:0);//启动垂直同步
         while(!this->is_exit){
             auto start_time = CurrentTimeMillis();
-
+            
             Render2d::getInstance()->executeRenderCommands();
 
             if(m_render_task_schedule != nullptr){

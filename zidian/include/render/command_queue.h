@@ -28,6 +28,8 @@ namespace zidian{
         std::shared_ptr<CommandPool>& getCurrentCommandPool();
 
         void submitWriteBuffer();
+
+        void showFrontBackIndex();
     private:
         static const int QUEUE_COUNT = 2;
 

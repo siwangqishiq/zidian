@@ -11,10 +11,17 @@ namespace zidian{
     }
 
     void CmdSetClearColor::execute() {  
-        // Log::e("render2d", "CmdSetClearColor run execute gl");
+        // Log::blue_log("debug" , "CmdSetClearColor run execute gl %f %f %f %f",
+        //     m_clear_color[0],
+        //     m_clear_color[1],
+        //     m_clear_color[2],
+        //     m_clear_color[3]);
+
         glClearColor(m_clear_color[0], 
             m_clear_color[1] ,
             m_clear_color[2] ,
             m_clear_color[3]);
+
+        // std::cout << glGetError() << std::endl;
     }
 }

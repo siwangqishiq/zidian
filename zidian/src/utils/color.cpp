@@ -9,7 +9,7 @@ namespace zidian{
             static_cast<float>(a/255.0f)
         ));
     }
-
+    
     ColorType Colors::WHITE = CreateColor(255,255,255,255);
     ColorType Colors::BLACK = CreateColor(0,0,0,255);
     ColorType Colors::RED = CreateColor(255,0,0,255);

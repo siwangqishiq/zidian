@@ -12,6 +12,11 @@ namespace zidian{
         for(int i = 0 ; i < QUEUE_COUNT; i++){
             m_command_pools[i] = std::make_shared<CommandPool>(m_render);
         }//end for i
+
+        // for(int i = 0; i < QUEUE_COUNT ;i++){
+        //     std::cout << "init command buffer size = " 
+        //         << m_buffers[i].size() << std::endl;
+        // }
     }
 
     CommandQueue::~CommandQueue(){
@@ -46,5 +51,12 @@ namespace zidian{
         m_back_index.store(old_front);
 
         m_ready.store(true);
+    }
+
+    void CommandQueue::showFrontBackIndex(){
+        Log::i("command_queue", "front index :%d  back Index : %d", 
+            m_front_index.load(),
+            m_back_index.load()
+        );
     }
 }
