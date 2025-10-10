@@ -5,6 +5,7 @@ project(zidian CXX)
 set(CMAKE_BUILD_TYPE Debug)
 
 include_directories(vender/glfw/include)
+include_directories(vender/vulkan)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS inlcude/*.h)
@@ -80,6 +81,14 @@ else()
 endif()
 
 target_link_libraries(${PROJECT_NAME} glfw3)
+
+if (WIN32)
+    message(STATUS "link windows vulkan library")
+    target_link_libraries(${PROJECT_NAME} "${CMAKE_SOURCE_DIR}/zidian/lib/windows/vulkan-1.lib")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message(STATUS "link linux vulkan library")
+    target_link_libraries(${PROJECT_NAME} "${CMAKE_SOURCE_DIR}/zidian/lib/linux/libvulkan.so.1.4.309")
+endif()
 
 # add_custom_command(TARGET zidian POST_BUILD
 #     COMMAND ${CMAKE_COMMAND} -E copy_directory

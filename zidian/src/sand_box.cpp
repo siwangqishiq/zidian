@@ -39,6 +39,11 @@ namespace zidian{
             glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
         }
 
+        //vulkan实现
+        if(Config.render_backend == RenderBackend::Vulkan){
+            glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        }
+
         Render2d::getInstance()->init();
 
         m_window = glfwCreateWindow(Config.view_width, Config.view_height, 

@@ -2,6 +2,7 @@
 #include "zidian.h"
 #include <string>
 #include <cmath>
+#include <memory>
 
 extern std::string audio_path;
 
@@ -215,14 +216,13 @@ int main(int argc, char *argv[]){
     param.view_width = 1280;
     param.view_height = 720;
     param.window_boardless = false;
-    param.render_backend = zidian::RenderBackend::Opengl;
+    // param.render_backend = zidian::RenderBackend::Opengl;
+    param.render_backend = zidian::RenderBackend::Vulkan;
     param.clear_color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
 
     sandBox.init(param);
-    
-    TestZidianRender *game = new TestZidianRender(&sandBox);
-    sandBox.setApp(game);
+    std::shared_ptr<TestZidianRender> game = std::make_shared<TestZidianRender>(&sandBox);
+    sandBox.setApp(game.get());
     const int ret_code = sandBox.runLoop(argc, argv);
-    delete game;
     return ret_code;
 }
