@@ -1,7 +1,9 @@
 #pragma once
 
 #include "render/irender.h"
-#include "vulkan/vulkan.h"
+
+#define VULKAN_HPP_NO_STRUCT_CONSTRUCTORS
+#include "vulkan/vulkan_raii.hpp"
 
 namespace zidian{
     const bool EnableValidationLayers = true;
@@ -19,7 +21,10 @@ namespace zidian{
         void createSurface();
         void pickPhysicalDevice();
 
-        VkInstance m_instance = VK_NULL_HANDLE;
-        VkPhysicalDevice m_physical_device = VK_NULL_HANDLE;
+        vk::raii::Context m_context;
+        vk::raii::Instance m_instance = nullptr;
+        vk::raii::PhysicalDevice m_physical_device = nullptr;
+    private:
+
     };
 }

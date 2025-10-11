@@ -478,8 +478,18 @@ extern "C"
 
     If the size of a type cannot be statically computed, perhaps because it depends on
     a generic parameter that has not been bound to a specific value, this function returns zero.
+
+    Use spReflectionType_GetSpecializedElementCount if the size is dependent on
+    a link time constant
     */
     SLANG_API size_t spReflectionType_GetElementCount(SlangReflectionType* type);
+
+    /** The same as spReflectionType_GetElementCount except it takes into account specialization
+     * information from the given reflection info
+     */
+    SLANG_API size_t spReflectionType_GetSpecializedElementCount(
+        SlangReflectionType* type,
+        SlangReflection* reflection);
 
     SLANG_API SlangReflectionType* spReflectionType_GetElementType(SlangReflectionType* type);
 
@@ -681,6 +691,8 @@ extern "C"
     SLANG_API size_t spReflectionVariableLayout_GetSpace(
         SlangReflectionVariableLayout* var,
         SlangParameterCategory category);
+    SLANG_API SlangImageFormat
+    spReflectionVariableLayout_GetImageFormat(SlangReflectionVariableLayout* var);
 
     SLANG_API char const* spReflectionVariableLayout_GetSemanticName(
         SlangReflectionVariableLayout* var);
@@ -738,6 +750,9 @@ extern "C"
     SLANG_API SlangReflectionGeneric* spReflectionDecl_castToGeneric(SlangReflectionDecl* decl);
     SLANG_API SlangReflectionType* spReflection_getTypeFromDecl(SlangReflectionDecl* decl);
     SLANG_API SlangReflectionDecl* spReflectionDecl_getParent(SlangReflectionDecl* decl);
+    SLANG_API SlangReflectionModifier* spReflectionDecl_findModifier(
+        SlangReflectionDecl* decl,
+        SlangModifierID modifierID);
 
     // Generic Reflection
 
@@ -892,6 +907,10 @@ extern "C"
         SlangReflection* reflection,
         SlangReflectionType* reflType,
         char const* name);
+    SLANG_API SlangReflectionFunction* spReflection_TryResolveOverloadedFunction(
+        SlangReflection* reflection,
+        uint32_t candidateCount,
+        SlangReflectionFunction** candidates);
 
     SLANG_API SlangUInt spReflection_getEntryPointCount(SlangReflection* reflection);
     SLANG_API SlangReflectionEntryPoint* spReflection_getEntryPointByIndex(
@@ -1592,6 +1611,8 @@ struct ICompileRequest : public ISlangUnknown
 
     virtual SLANG_NO_THROW void SLANG_MCALL
     setTargetEmbedDownstreamIR(int targetIndex, bool value) = 0;
+
+    virtual SLANG_NO_THROW void SLANG_MCALL setTargetForceCLayout(int targetIndex, bool value) = 0;
 };
 
     #define SLANG_UUID_ICompileRequest ICompileRequest::getTypeGuid()
