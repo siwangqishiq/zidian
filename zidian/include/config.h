@@ -5,10 +5,19 @@
 #include <string>
 #include "glm/glm.hpp"
 
+#ifndef __ANDROID__
+#define GLFW_INCLUDE_NONE
+#include "GLFW/glfw3.h"
+#endif
+
 namespace zidian{
     struct GlobalVars{
         int argc;
         char **argv;
+
+#ifndef __ANDROID__
+        GLFWwindow *windows;
+#endif
     };
     
     struct AppParams{

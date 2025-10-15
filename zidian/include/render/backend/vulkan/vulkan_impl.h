@@ -5,6 +5,19 @@
 #define VULKAN_HPP_NO_STRUCT_CONSTRUCTORS
 #include "vulkan/vulkan_raii.hpp"
 
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
+
+extern "C" {
+GLFWAPI VkResult glfwCreateWindowSurface(
+            VkInstance instance,
+            GLFWwindow* handle,
+            const VkAllocationCallbacks* allocator,
+            VkSurfaceKHR* surface
+        );
+}
+
 namespace zidian{
     const bool EnableValidationLayers = true;
 
@@ -45,9 +58,10 @@ namespace zidian{
 
         void createInstance();
         void setDebugMessenger();
-        void createSurface();
         void pickPhysicalDevice();
         void createLogicDevice();
+        void createSurface();
+        void createSwapchain();
 
         static vk::Bool32 debugCallback(
                 vk::DebugUtilsMessageSeverityFlagBitsEXT severity, 
@@ -59,6 +73,13 @@ namespace zidian{
         vk::raii::PhysicalDevice m_physical_device = nullptr;
         vk::raii::DebugUtilsMessengerEXT m_debug_messenger = nullptr;
         vk::raii::Device m_device = nullptr;
-        vk::raii::Queue m_graph_queue = nullptr;
+
+        vk::raii::Queue m_graphics_queue = nullptr;
+
+        vk::raii::SurfaceKHR m_surface = nullptr;
+        vk::raii::Queue m_present_queue = nullptr;
+
+        int m_graphics_queue_index = -1;
+        int m_present_queue_index = -1;
     };
 }

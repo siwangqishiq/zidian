@@ -142,6 +142,8 @@ namespace zidian{
         });
 
         glfwSetWindowPos(m_window, 32, 64);
+        Global.windows = m_window;
+        
         glfwSetWindowUserPointer(m_window, static_cast<void *>(this));
         m_render_thread = std::thread([this](){
            renderThreadFunc();
