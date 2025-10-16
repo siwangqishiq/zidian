@@ -80,7 +80,10 @@ namespace zidian{
         ss << str;
         return ss.str();
     }
-
+    
+    std::string ToString(bool v){
+        return v ? "true" : "false";
+    }
 }
 
 

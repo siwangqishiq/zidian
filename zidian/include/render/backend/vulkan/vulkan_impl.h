@@ -62,6 +62,11 @@ namespace zidian{
         void createLogicDevice();
         void createSurface();
         void createSwapchain();
+        void creatImageViews();
+
+        vk::Extent2D chooseSwapchainExtent(const vk::SurfaceCapabilitiesKHR &capabilities);
+        vk::SurfaceFormatKHR chooseSwapchainFormat(std::vector<vk::SurfaceFormatKHR> &formats);
+        vk::PresentModeKHR chooseSwapchainPresentMode();
 
         static vk::Bool32 debugCallback(
                 vk::DebugUtilsMessageSeverityFlagBitsEXT severity, 
@@ -81,5 +86,13 @@ namespace zidian{
 
         int m_graphics_queue_index = -1;
         int m_present_queue_index = -1;
+
+        vk::Extent2D m_swapchain_extent;
+        vk::SurfaceFormatKHR m_surface_format;
+        vk::PresentModeKHR m_present_mode;
+        
+        vk::raii::SwapchainKHR m_swapchain = nullptr;
+        std::vector<vk::Image> m_swapchain_images;
+        std::vector<vk::raii::ImageView> m_swapchain_imageviews;
     };
 }

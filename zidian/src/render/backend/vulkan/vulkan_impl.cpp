@@ -19,9 +19,6 @@ namespace zidian{
     }
 
     void VulkanRender::initVulkan(){
-#ifdef _WIN32
-        _putenv("VK_LOADER_DEBUG=none");
-#endif
         createInstance();
         setDebugMessenger();
         pickPhysicalDevice();
@@ -94,7 +91,6 @@ namespace zidian{
         }
 
         vk::DebugUtilsMessageSeverityFlagsEXT severity_flags(
-            vk::DebugUtilsMessageSeverityFlagBitsEXT::eVerbose | 
             vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning | 
             vk::DebugUtilsMessageSeverityFlagBitsEXT::eError
         );
@@ -119,9 +115,7 @@ namespace zidian{
             vk::DebugUtilsMessageTypeFlagsEXT type, 
             const vk::DebugUtilsMessengerCallbackDataEXT* callback_data, void* user_data){
         if(severity == vk::DebugUtilsMessageSeverityFlagBitsEXT::eError
-            || severity == vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning
-            || severity == vk::DebugUtilsMessageSeverityFlagBitsEXT::eInfo
-            || severity == vk::DebugUtilsMessageSeverityFlagBitsEXT::eVerbose){
+            || severity == vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning){
             Log::e(TAG , "validation layer: type %d : %s msg: %s", type, callback_data->pMessage);
         }
         return vk::False;
@@ -172,8 +166,6 @@ namespace zidian{
 
         m_device = vk::raii::Device(m_physical_device, device_create_info);
         m_graphics_queue = vk::raii::Queue(m_device, m_graphics_queue_index, 0);
-
-
     }
 
     int VulkanRender::findQueueFamilies(vk::raii::PhysicalDevice phyDevice){
@@ -212,25 +204,75 @@ namespace zidian{
         Log::i(TAG, "create swapchain");
 
         const vk::SurfaceCapabilitiesKHR capabilities = m_physical_device.getSurfaceCapabilitiesKHR(*m_surface);
-        const std::vector<vk::SurfaceFormatKHR> formats = m_physical_device.getSurfaceFormatsKHR(*m_surface);
+        std::vector<vk::SurfaceFormatKHR> formats = m_physical_device.getSurfaceFormatsKHR(*m_surface);
         // Log::i(TAG, "surface capabilities : %s", vk::to_string(capabilities).c_str());
 
+        m_swapchain_extent = chooseSwapchainExtent(capabilities);
+        Log::i(TAG, "swapchain extent %d %d", m_swapchain_extent.width , m_swapchain_extent.height);
+        m_surface_format = chooseSwapchainFormat(formats);
+        m_present_mode = chooseSwapchainPresentMode();
 
-        // vk::SwapchainCreateInfoKHR create_info{
-        //     .flags = vk::SwapchainCreateFlagsKHR(),
-        //     .surface = m_surface,
-        //     .minImageCount = 2,
-        //     .imageFormat = vk::Format::eB8G8R8A8Unorm,
-        //     .imageColorSpace = vk::ColorSpaceKHR::eSrgbNonlinear,
-        //     .imageExtent = vk::Extent2D(Global.width, Global.height),
-        //     .imageArrayLayers = 1,
-        //     .imageUsage = vk::ImageUsageFlagBits::eColorAttachment,
-        //     .preTransform = vk::SurfaceTransformFlagBitsKHR::eIdentity,
-        //     .compositeAlpha = vk::CompositeAlphaFlagBitsKHR::eOpaque,
-        //     .presentMode = vk::PresentModeKHR::eFifo,
-        //     .clipped = vk::True,
-        //     .oldSwapchain = nullptr,
-        // };
+        // std::cout << "minImageCount  = " << capabilities.minImageCount <<
+        //     " maxImage Count : " << capabilities.maxImageCount << std::endl;
+
+        vk::SwapchainCreateInfoKHR swapChainCreateInfo{ 
+            .surface = *m_surface,
+            .minImageCount = capabilities.minImageCount + 1,
+            .imageFormat = m_surface_format.format,
+            .imageColorSpace  = m_surface_format.colorSpace,
+            .imageExtent = m_swapchain_extent,
+            .imageArrayLayers = 1,
+            .imageUsage = vk::ImageUsageFlagBits::eColorAttachment,
+            .imageSharingMode = vk::SharingMode::eExclusive,
+            .preTransform = capabilities.currentTransform,
+            .compositeAlpha = vk::CompositeAlphaFlagBitsKHR::eOpaque,
+            .presentMode = m_present_mode,
+            .clipped = true 
+        };
+
+        m_swapchain = vk::raii::SwapchainKHR(m_device, swapChainCreateInfo);
+        m_swapchain_images = m_swapchain.getImages();
+    }
+
+    void VulkanRender::creatImageViews(){
+        Log::i(TAG, "create imageviews");
+
+        if(m_swapchain_images.empty()){
+            Log::e(TAG, "create image view but image is empty");
+            return;
+        }
+
+        m_swapchain_imageviews.clear();
+        for(int i = 0 ; i < m_swapchain_images.size(); i++){
+            vk::ImageViewCreateInfo createInfo{
+                .image = m_swapchain_images[i]
+            };
+            m_swapchain_imageviews.emplace_back(m_device, createInfo);
+        }//end for i
+    }
+
+    vk::Extent2D VulkanRender::chooseSwapchainExtent(const vk::SurfaceCapabilitiesKHR &capabilities){
+        return capabilities.currentExtent;
+    }
+    
+    vk::SurfaceFormatKHR VulkanRender::chooseSwapchainFormat(std::vector<vk::SurfaceFormatKHR> &formats){
+        for(auto &format : formats){
+            if(format.format == vk::Format::eB8G8R8A8Srgb && format.colorSpace == vk::ColorSpaceKHR::eSrgbNonlinear){
+                return format;
+            }
+        }
+        return formats[0];
+    }
+
+    vk::PresentModeKHR VulkanRender::chooseSwapchainPresentMode(){
+        std::vector<vk::PresentModeKHR> presentModes = m_physical_device.getSurfacePresentModesKHR(*m_surface);
+        for(vk::PresentModeKHR &presentMode : presentModes){
+            // std::cout << "present mode :" << vk::to_string(presentMode) << std::endl;
+            if(presentMode == vk::PresentModeKHR::eMailbox){
+                return presentMode;
+            }
+        }
+        return vk::PresentModeKHR::eFifo;
     }
 
 }
