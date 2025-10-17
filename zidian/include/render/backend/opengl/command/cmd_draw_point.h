@@ -1,6 +1,7 @@
 #pragma once
 
 #include "glm/glm.hpp"
+
 #include "render/paint.h"
 #include "render/command/types.h"
 #include "render/backend/opengl/command/cmd_base_opengl.h"
@@ -17,8 +18,7 @@ namespace zidian{
 
         virtual ~CmdDrawPoint();
     private:
-        float m_x;
-        float m_y;
+        glm::vec2 m_pos;
         glm::vec4 m_color;
         Paint m_paint;
         

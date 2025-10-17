@@ -31,6 +31,7 @@ namespace zidian{
         //设备级扩展
         const std::vector<const char*> deviceExtensions = {
             vk::KHRSwapchainExtensionName,
+            vk::KHRShaderDrawParametersExtensionName,
             vk::KHRSpirv14ExtensionName,
             vk::KHRSynchronization2ExtensionName,
             vk::KHRCreateRenderpass2ExtensionName
@@ -48,6 +49,7 @@ namespace zidian{
         std::vector<const char*> getRequiredExtensions();
         int findQueueFamilies(vk::raii::PhysicalDevice phyDevice);
 
+        vk::raii::ShaderModule createShaderModule(uint8_t *code, long length);
     public:
         virtual int init() override;
         virtual int initEvironment() override;
@@ -62,7 +64,9 @@ namespace zidian{
         void createLogicDevice();
         void createSurface();
         void createSwapchain();
-        void creatImageViews();
+        void createImageViews();
+
+        void createGraphPipeline();
 
         vk::Extent2D chooseSwapchainExtent(const vk::SurfaceCapabilitiesKHR &capabilities);
         vk::SurfaceFormatKHR chooseSwapchainFormat(std::vector<vk::SurfaceFormatKHR> &formats);
@@ -94,5 +98,8 @@ namespace zidian{
         vk::raii::SwapchainKHR m_swapchain = nullptr;
         std::vector<vk::Image> m_swapchain_images;
         std::vector<vk::raii::ImageView> m_swapchain_imageviews;
+
+        vk::raii::PipelineLayout m_pipeline_layout = nullptr;
+        vk::raii::Pipeline m_graph_pipeline = nullptr;
     };
 }

@@ -155,6 +155,9 @@ namespace zidian{
         m_render_thread.join();
         glfwDestroyWindow(m_window);
         glfwTerminate();
+        
+        Log::w(TAG, "sand box ended.");
+
         return 0;
     }
 

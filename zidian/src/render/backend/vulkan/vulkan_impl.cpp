@@ -3,6 +3,7 @@
 #include "config.h"
 #include "utils/log.h"
 #include <vulkan/vk_platform.h>
+#include "resource/asset_manager.h"
 
 namespace zidian{
     const char *TAG = "vulkan_render";
@@ -26,6 +27,7 @@ namespace zidian{
         createSurface();
         createLogicDevice();
         createSwapchain();
+        createGraphPipeline();
     }
 
     void VulkanRender::dispose(){
@@ -234,7 +236,7 @@ namespace zidian{
         m_swapchain_images = m_swapchain.getImages();
     }
 
-    void VulkanRender::creatImageViews(){
+    void VulkanRender::createImageViews(){
         Log::i(TAG, "create imageviews");
 
         if(m_swapchain_images.empty()){
@@ -243,12 +245,121 @@ namespace zidian{
         }
 
         m_swapchain_imageviews.clear();
+
+        vk::ImageViewCreateInfo imageViewCreateInfo{ 
+            .viewType = vk::ImageViewType::e2D, 
+            .format = m_surface_format.format,
+            .subresourceRange = { 
+                vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1 
+            }
+        };
         for(int i = 0 ; i < m_swapchain_images.size(); i++){
-            vk::ImageViewCreateInfo createInfo{
-                .image = m_swapchain_images[i]
-            };
-            m_swapchain_imageviews.emplace_back(m_device, createInfo);
+            imageViewCreateInfo.image = m_swapchain_images[i];
+            m_swapchain_imageviews.emplace_back(m_device, imageViewCreateInfo);
         }//end for i
+    }
+
+    void VulkanRender::createGraphPipeline(){
+        Log::i(TAG, "create graphics pipeline");
+        
+        long code_length = 0;
+        std::unique_ptr<uint8_t[]> code_data = AssetManager::getInstance()->readAssetFileAsBinary("zidian_shader/spirv/draw_triangle.spirv",code_length);
+        vk::raii::ShaderModule shader_module = createShaderModule(code_data.get(), code_length);
+
+        vk::PipelineShaderStageCreateInfo vert_stage_info{ 
+            .stage = vk::ShaderStageFlagBits::eVertex, 
+            .module = shader_module,  
+            .pName = "vertMain" 
+        };
+
+        vk::PipelineShaderStageCreateInfo frag_stage_info{
+            .stage = vk::ShaderStageFlagBits::eFragment,
+            .module = shader_module,
+            .pName = "fragMain"
+        };
+
+        vk::PipelineShaderStageCreateInfo stage_create_infos[] ={
+            vert_stage_info, 
+            frag_stage_info
+        };
+
+        vk::PipelineVertexInputStateCreateInfo vertex_input_info{};
+
+        vk::PipelineInputAssemblyStateCreateInfo input_assembly{  
+            .topology = vk::PrimitiveTopology::eTriangleList 
+        };
+
+        vk::PipelineViewportStateCreateInfo viewport_state{ 
+            .viewportCount = 1, 
+            .scissorCount = 1 
+        };
+
+        vk::PipelineRasterizationStateCreateInfo rasterizer{  
+            .depthClampEnable = vk::False, 
+            .rasterizerDiscardEnable = vk::False,
+            .polygonMode = vk::PolygonMode::eFill, 
+            .cullMode = vk::CullModeFlagBits::eBack,
+            .frontFace = vk::FrontFace::eClockwise, 
+            .depthBiasEnable = vk::False,
+            .depthBiasSlopeFactor = 1.0f, 
+            .lineWidth = 1.0f 
+        };
+
+        vk::PipelineMultisampleStateCreateInfo multisampling{
+            .rasterizationSamples = vk::SampleCountFlagBits::e1, 
+            .sampleShadingEnable = vk::False
+        };
+
+        vk::PipelineColorBlendAttachmentState color_blend_attach{ 
+            .blendEnable = vk::False,
+            .colorWriteMask = vk::ColorComponentFlagBits::eR | vk::ColorComponentFlagBits::eG | vk::ColorComponentFlagBits::eB | vk::ColorComponentFlagBits::eA
+        };
+
+        vk::PipelineColorBlendStateCreateInfo color_blending{
+            .logicOpEnable = vk::False, 
+            .logicOp =  vk::LogicOp::eCopy, 
+            .attachmentCount = 1, 
+            .pAttachments =  &color_blend_attach
+        };
+
+        std::vector<vk::DynamicState> dynamicStates = {
+            vk::DynamicState::eViewport,
+            vk::DynamicState::eScissor
+        };
+
+        vk::PipelineDynamicStateCreateInfo dynamic_state{ 
+            .dynamicStateCount = static_cast<uint32_t>(dynamicStates.size()), 
+            .pDynamicStates = dynamicStates.data() 
+        };
+
+        vk::PipelineLayoutCreateInfo pipeline_layout_info{  
+            .setLayoutCount = 0, 
+            .pushConstantRangeCount = 0 
+        };
+
+        m_pipeline_layout = vk::raii::PipelineLayout(m_device, pipeline_layout_info);
+
+        vk::PipelineRenderingCreateInfo pipeline_rendering_create_info{ 
+            .colorAttachmentCount = 1, 
+            .pColorAttachmentFormats = &(m_surface_format.format)
+        };
+
+        vk::GraphicsPipelineCreateInfo pipeline_create_info{ 
+            .pNext = &pipeline_rendering_create_info,
+            .stageCount = 2, 
+            .pStages = stage_create_infos,
+            .pVertexInputState = &vertex_input_info, 
+            .pInputAssemblyState = &input_assembly,
+            .pViewportState = &viewport_state, 
+            .pRasterizationState = &rasterizer,
+            .pMultisampleState = &multisampling, 
+            .pColorBlendState = &color_blending,
+            .pDynamicState = &dynamic_state, 
+            .layout = m_pipeline_layout, 
+            .renderPass = nullptr 
+        };
+        
+        m_graph_pipeline = vk::raii::Pipeline(m_device, nullptr, pipeline_create_info);
     }
 
     vk::Extent2D VulkanRender::chooseSwapchainExtent(const vk::SurfaceCapabilitiesKHR &capabilities){
@@ -273,6 +384,16 @@ namespace zidian{
             }
         }
         return vk::PresentModeKHR::eFifo;
+    }
+
+    vk::raii::ShaderModule VulkanRender::createShaderModule(uint8_t *code, long length){
+        vk::ShaderModuleCreateInfo createInfo{
+            .codeSize = static_cast<size_t>(length),
+            .pCode = reinterpret_cast<const uint32_t*>(code)
+        };
+
+        vk::raii::ShaderModule shaderModule{m_device , createInfo};
+        return std::move(shaderModule);
     }
 
 }

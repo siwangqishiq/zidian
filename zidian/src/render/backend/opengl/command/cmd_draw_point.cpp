@@ -6,8 +6,9 @@
 
 namespace zidian{
     void CmdDrawPoint::putParams(float x, float y, glm::vec4 color , Paint paint){
-        m_x = x;
-        m_y = y;
+        m_pos[0] = x;
+        m_pos[1] = y;
+
         m_color = color;
         m_paint = paint;
     }
@@ -52,7 +53,7 @@ namespace zidian{
         draw_point_shader.setUniformFloat(UNIFORM_NAME_POINTSIZE, m_paint.point_size);
 
         //update data
-        float pointPos[2 + 4] = { m_x, m_y , m_color[0], m_color[1], m_color[2], m_color[3]};
+        float pointPos[2 + 4] = { m_pos[0], m_pos[1] , m_color[0], m_color[1], m_color[2], m_color[3]};
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(pointPos), pointPos);
 
